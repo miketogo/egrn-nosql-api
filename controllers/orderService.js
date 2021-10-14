@@ -34,7 +34,7 @@ module.exports.order = (req, res, next) => {
       //   }
       // };
       if (serviceName === "Подключение eSim") {
-        bot.sendMessage(-665556054,
+        bot.sendMessage(-1001742268685,
           `Новая заявка на подключение eSIM
           
 *${serviceName}*
@@ -44,7 +44,7 @@ module.exports.order = (req, res, next) => {
 Дата: *${date}*
 `, { parse_mode: 'Markdown' });
       } else {
-        bot.sendMessage(-665556054,
+        bot.sendMessage(-10017422686854,
           `Новая заявка на подключение услуги
           
 Название услуги: *${serviceName}*

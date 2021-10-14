@@ -48,7 +48,7 @@ module.exports.order = (req, res, next) => {
       })
         .then((result) => {
 
-          bot.sendMessage(-665556054,
+          bot.sendMessage(-1001742268685,
             `Новая заявка на подключение тарифа
               
 Способ подключения: *${productionMethod}*
@@ -99,7 +99,7 @@ module.exports.order = (req, res, next) => {
       })
         .then((result) => {
 
-          bot.sendMessage(-665556054,
+          bot.sendMessage(-1001742268685,
             `Новая заявка на подключение тарифа
               
 Способ подключения: *${productionMethod}*
@@ -147,7 +147,7 @@ module.exports.order = (req, res, next) => {
     })
       .then((result) => {
 
-        bot.sendMessage(-665556054,
+        bot.sendMessage(-1001742268685,
                       `Новая заявка на подключение тарифа
               
 Способ подключения: *${productionMethod}*
