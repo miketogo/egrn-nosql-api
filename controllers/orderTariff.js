@@ -50,7 +50,8 @@ module.exports.order = (req, res, next) => {
 
           bot.sendMessage(-1001742268685,
             `————————————
-        *Новая заявка*         
+        *Новая заявка* 
+        
 Способ подключения: *${productionMethod}*
 Способ получения: *${deliveryMethod}*
 Дата доставки: *${deliveryDate}*
