@@ -49,6 +49,7 @@ const CORS_WHITELIST = [
   // app.use(cors(corsOption));
   app.use('/api/order-tariff', require('./routes/orderTariff'));
   app.use('/api/order-service', require('./routes/orderService'));
+  app.use('/api/transfer-number', require('./routes/trasferNumber'));
  
   // eslint-disable-next-line no-unused-vars
   app.use((req, res) => {

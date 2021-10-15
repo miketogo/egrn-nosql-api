@@ -58,7 +58,6 @@ module.exports.order = (req, res, next) => {
 Время доставки: *${deliveryTime}*
 Адрес доставки: *${deliveryAddress}*
 
-
 Название тарифа: *${tariffName}*
 Опции тарифа: *${tariffOptions}*
 Безлимитный 4G: *${unlimitedInternet? "Да": "Нет"}*
@@ -106,8 +105,7 @@ module.exports.order = (req, res, next) => {
               
 Способ подключения: *${productionMethod}*
 Способ получения: *${deliveryMethod}*
-            
-            
+                       
 Название тарифа: *${tariffName}*
 Опции тарифа: *${tariffOptions}*
 Безлимитный 4G: *${unlimitedInternet? "Да": "Нет"}*
