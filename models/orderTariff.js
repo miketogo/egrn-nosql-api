@@ -27,7 +27,7 @@ const orderTariffSchema = new mongoose.Schema({
     },
     selectedNumber:
     {
-        number: {
+        ctn: {
             type: String,
         },
         category: {
