@@ -35,23 +35,24 @@ module.exports.order = (req, res, next) => {
       // };
       if (serviceName === "Подключение eSim") {
         bot.sendMessage(-1001742268685,
-          `Новая заявка на подключение eSIM
-          
+          `————————————
+        *Новая заявка*
+
 *${serviceName}*
           
 Телефон: *${userPhone}*
 Откуда заявка: *${fromMosсow}*
 Дата: *${date}*
-`, { parse_mode: 'Markdown' });
+————————————`, { parse_mode: 'Markdown' });
       } else {
         bot.sendMessage(-1001742268685,
-          `Новая заявка на подключение услуги
-          
+          `————————————
+        *Новая заявка*
 Название услуги: *${serviceName}*
 Телефон: *${userPhone}*
 Откуда заявка: *${fromMosсow}*
 Дата: *${date}*
-`, { parse_mode: 'Markdown' });
+————————————`, { parse_mode: 'Markdown' });
       }
 
       res.status(200).send({ result })

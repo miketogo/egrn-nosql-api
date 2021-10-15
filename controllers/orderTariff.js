@@ -49,8 +49,8 @@ module.exports.order = (req, res, next) => {
         .then((result) => {
 
           bot.sendMessage(-1001742268685,
-            `Новая заявка на подключение тарифа
-              
+            `————————————
+        *Новая заявка*         
 Способ подключения: *${productionMethod}*
 Способ получения: *${deliveryMethod}*
 Дата доставки: *${deliveryDate}*
@@ -68,7 +68,7 @@ module.exports.order = (req, res, next) => {
 Контактный телефон: *${userPhone}*
 Откуда заявка: *${fromMosсow}*
 Дата: *${date}*
-    `, { parse_mode: 'Markdown' });
+————————————`, { parse_mode: 'Markdown' });
 
 
           res.status(200).send({ result })
@@ -100,7 +100,8 @@ module.exports.order = (req, res, next) => {
         .then((result) => {
 
           bot.sendMessage(-1001742268685,
-            `Новая заявка на подключение тарифа
+            `————————————
+        *Новая заявка*
               
 Способ подключения: *${productionMethod}*
 Способ получения: *${deliveryMethod}*
@@ -116,7 +117,7 @@ module.exports.order = (req, res, next) => {
 Контактный телефон: *${userPhone}*
 Откуда заявка: *${fromMosсow}*
 Дата: *${date}*
-    `, { parse_mode: 'Markdown' });
+————————————`, { parse_mode: 'Markdown' });
 
 
           res.status(200).send({ result })
@@ -148,7 +149,8 @@ module.exports.order = (req, res, next) => {
       .then((result) => {
 
         bot.sendMessage(-1001742268685,
-                      `Новая заявка на подключение тарифа
+                      `————————————
+        *Новая заявка*
               
 Способ подключения: *${productionMethod}*
 Переносимый номер: *${transferredNumber}*           
@@ -162,7 +164,7 @@ module.exports.order = (req, res, next) => {
 Контактный телефон: *${userPhone}*
 Откуда заявка: *${fromMosсow}*
 Дата: *${date}*
-    `, { parse_mode: 'Markdown' });
+————————————`, { parse_mode: 'Markdown' });
 
 
         res.status(200).send({ result })
