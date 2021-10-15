@@ -34,8 +34,8 @@ module.exports.transfer = (req, res, next) => {
     *Новая заявка* 
 
 *Перенос номера*
-Дата переноса: *${transferDate}*
 
+Дата переноса: *${transferDate}*
 Переносимый номер номер: *${transferredNumber}*
 
 Контактный телефон: *${userPhone}*
