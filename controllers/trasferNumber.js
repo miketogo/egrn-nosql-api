@@ -31,12 +31,12 @@ module.exports.transfer = (req, res, next) => {
 
       bot.sendMessage(-1001742268685,
         `————————————
-    *Новая заявка* 
+        *Новая заявка* 
 
 *Перенос номера*
 
 Дата переноса: *${transferDate}*
-Переносимый номер номер: *${transferredNumber}*
+Переносимый номер: *${transferredNumber}*
 
 Контактный телефон: *${userPhone}*
 Откуда заявка: *${fromMosсow}*
