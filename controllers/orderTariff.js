@@ -62,7 +62,7 @@ module.exports.order = (req, res, next) => {
 Опции тарифа: *${tariffOptions}*
 Безлимитный 4G: *${unlimitedInternet? "Да": "Нет"}*
 Раздача интернета: *${modem? "Да": "Нет"}*
-Выбранный номер: *${selectedNumber.number}*
+Выбранный номер: *${selectedNumber.ctn}*
 Категория выбранного номера: *${selectedNumber.category}*
 
 Контактный телефон: *${userPhone}*
@@ -110,7 +110,7 @@ module.exports.order = (req, res, next) => {
 Опции тарифа: *${tariffOptions}*
 Безлимитный 4G: *${unlimitedInternet? "Да": "Нет"}*
 Раздача интернета: *${modem? "Да": "Нет"}*
-Выбранный номер: *${selectedNumber.number}*
+Выбранный номер: *${selectedNumber.ctn}*
 Категория выбранного номера: *${selectedNumber.category}*
             
 Контактный телефон: *${userPhone}*
