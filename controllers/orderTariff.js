@@ -51,7 +51,9 @@ module.exports.order = (req, res, next) => {
           bot.sendMessage(-1001742268685,
             `————————————
         *Новая заявка* 
-        
+
+*Подключение тарифа*
+
 Способ подключения: *${productionMethod}*
 Способ получения: *${deliveryMethod}*
 Дата доставки: *${deliveryDate}*
@@ -102,7 +104,9 @@ module.exports.order = (req, res, next) => {
           bot.sendMessage(-1001742268685,
             `————————————
         *Новая заявка*
-              
+
+*Подключение тарифа*
+
 Способ подключения: *${productionMethod}*
 Способ получения: *${deliveryMethod}*
                        
@@ -150,7 +154,9 @@ module.exports.order = (req, res, next) => {
         bot.sendMessage(-1001742268685,
                       `————————————
         *Новая заявка*
-              
+
+*Подключение тарифа*
+
 Способ подключения: *${productionMethod}*
 Переносимый номер: *${transferredNumber}*           
             

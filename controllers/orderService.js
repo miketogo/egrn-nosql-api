@@ -49,6 +49,8 @@ module.exports.order = (req, res, next) => {
           `————————————
         *Новая заявка*
 
+*Подключение услуги*
+
 Название услуги: *${serviceName}*
 Телефон: *${userPhone}*
 Откуда заявка: *${fromMosсow}*

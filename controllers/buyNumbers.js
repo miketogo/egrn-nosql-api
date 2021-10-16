@@ -40,6 +40,8 @@ module.exports.order = (req, res, next) => {
           `————————————
         *Новая заявка*
 
+*Приобретение номера*
+
 Способ получения: *${deliveryMethod}*
 Дата доставки: *${deliveryDate}*
 Время доставки: *${deliveryTime}*
@@ -89,6 +91,8 @@ ${numbersArray.map((item, i) => {
         bot.sendMessage(-1001742268685,
           `————————————
           *Новая заявка*
+
+*Приобретение номера*
 
 Способ получения: *${deliveryMethod}*
 
