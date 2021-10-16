@@ -38,14 +38,6 @@ const buyNumbersSchema = new mongoose.Schema({
                 type: String,
                 required: true,
             },
-            unlimitedInternet: {
-                type: Boolean,
-                required: true,
-            },
-            modem: {
-                type: Boolean,
-                required: true,
-            },
         }
     ],
     date: {
