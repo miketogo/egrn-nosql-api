@@ -46,7 +46,7 @@ module.exports.order = (req, res, next) => {
 Адрес доставки: *${deliveryAddress}*
 
 ${numbersArray.map((item, i) => {
-            `____________
+  return`____________
 *Выбранный номер ${i+1}*
 
 Номер: *${item.ctn}*
@@ -93,7 +93,7 @@ ____________`
 Способ получения: *${deliveryMethod}*
 
 ${numbersArray.map((item, i) => {
-  `____________
+  return`____________
 *Выбранный номер ${i+1}*
 
 Номер: *${item.ctn}*
