@@ -1,5 +1,5 @@
 {
-  "name": "boom-lead-api",
+  "name": "egrn-nosql-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/miketogo/boom-lead-api.git"
+    "url": "git+https://github.com/miketogo/egrn-nosql-api.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/miketogo/boom-lead-api/issues"
+    "url": "https://github.com/miketogo/egrn-nosql-api/issues"
   },
-  "homepage": "https://github.com/miketogo/boom-lead-api#readme",
+  "homepage": "https://github.com/miketogo/egrn-nosql-api#readme",
   "dependencies": {
     "celebrate": "^15.0.0",
     "cookie-parser": "^1.4.5",
@@ -27,6 +27,7 @@
     "helmet": "^4.6.0",
     "moment-timezone": "^0.5.33",
     "mongoose": "^6.0.10",
+    "node-fetch": "^3.0.0",
     "node-telegram-bot-api": "^0.54.0",
     "validator": "^13.6.0",
     "winston": "^3.3.3"

@@ -31,15 +31,11 @@ const CORS_WHITELIST = [
       'https://localhost:3000',
       'https://www.localhost:3000',
       'http://www.localhost:3000',
-      'http://boomtele.com',
-      'https://boomtele.com',
-      'https://www.boomtele.com',
-      'http://www.boomtele.com',
       ],
   };
   app.use('*', cors(corsOption));
   app.use(cookieParser());
-  mongoose.connect('mongodb://localhost:27017/boom', {
+  mongoose.connect('mongodb://localhost:27017/egrn', {
     useUnifiedTopology: true,
     useNewUrlParser: true,
   });
@@ -47,11 +43,9 @@ const CORS_WHITELIST = [
   app.use(express.json());
   app.use(requestLogger);
   // app.use(cors(corsOption));
-  app.use('/api/order-tariff', require('./routes/orderTariff'));
-  app.use('/api/order-service', require('./routes/orderService'));
-  app.use('/api/transfer-number', require('./routes/trasferNumber'));
-  app.use('/api/buy-numbers', require('./routes/buyNumbers'));
- 
+  app.use('/users', require('./routes/users'));
+  app.use('/orders', require('./routes/orders'));
+  
   // eslint-disable-next-line no-unused-vars
   app.use((req, res) => {
     throw new NotFoundError('Запрашиваемый ресурс не найден');
@@ -63,15 +57,13 @@ const CORS_WHITELIST = [
   app.use((err, req, res, next) => {
     // если у ошибки нет статуса, выставляем 500
     const { statusCode = 500, message } = err;
-  
+    console.log(err)
     res
       .status(statusCode)
       .send({
-        // проверяем статус и выставляем сообщение в зависимости от него
         message: statusCode === 500
-          // ? 'На сервере произошла ошибка'
-          ? message
-          : message,
+        ? 'На сервере произошла ошибка'
+        : message,
       });
   });
   
