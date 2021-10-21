@@ -20,13 +20,36 @@ module.exports.create = (req, res, next) => {
     phone_number,
     reg_date: date,
   })
-    .then((result) => {
-      res.status(200).send({ user: result })
+    .then((user) => {
+      res.status(200).send({user})
     })
     .catch((err) => {
       console.log(err)
       if (err.code === 11000) {
         throw new ConflictError('При регистрации указан телефон, который уже существует на сервере');
+      }
+      if (err.name === 'ValidationError') {
+        throw new InvalidDataError('Переданы некорректные данные при создании пользователя');
+      }
+    })
+    .catch(next)
+};
+
+
+module.exports.findByTgId = (req, res, next) => {
+  const {
+    telegram_id
+  } = req.body;
+  User.findOne({
+    telegram_id
+  }).orFail(() => new Error('NotFound'))
+    .then((user) => {
+      res.status(200).send({ user })
+    })
+    .catch((err) => {
+      console.log(err)
+      if (err.code === 11000) {
+        throw new ConflictError('MongoError');
       }
       if (err.name === 'ValidationError') {
         throw new InvalidDataError('Переданы некорректные данные при создании пользователя');
