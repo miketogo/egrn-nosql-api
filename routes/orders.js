@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
-  create,
+  create, getTime
 } = require('../controllers/orders');
 
 router.post('/create', celebrate({
@@ -17,15 +17,11 @@ router.post('/create', celebrate({
   }),
 }), create);
 
-router.patch('/update', celebrate({
+router.patch('/get-time', celebrate({
   body: Joi.object().keys({
-    order_id: Joi.string().required(),
-    order_item_id: Joi.string().required(),
-    rosreestr_key: Joi.string().required(),
-    response_id: Joi.string().required(),
-    status: Joi.string().required(),
+    flats: Joi.string().required(),
   }),
-}), create);
+}), getTime);
 
 
 module.exports = router;
