@@ -113,8 +113,11 @@ module.exports.create = (req, res, next) => {
             throw new Error('NotEnoughtBalance')
           }
           if (keyWithdraws[keyIndex].balance === 0) {
-            if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
-            else keyIndex = keyIndex + 1
+             
+          if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
+          else keyIndex = keyIndex + 1
+          flatNumber= flatNumber - 1
+          continue
           }
 
           keyWithdraws = keyWithdraws.map((item, i) => {
@@ -149,8 +152,11 @@ module.exports.create = (req, res, next) => {
           throw new Error('NotEnoughtBalance')
         }
         if (keyWithdraws[keyIndex].balance === 0) {
+           
           if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
           else keyIndex = keyIndex + 1
+          flatNumber= flatNumber - 1
+          continue
         }
 
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -378,8 +384,12 @@ module.exports.getTime = (req, res, next) => {
             throw new Error('NotEnoughtBalance')
           }
           if (keyWithdraws[keyIndex].balance === 0) {
-            if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
-            else keyIndex = keyIndex + 1
+ 
+             
+          if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
+          else keyIndex = keyIndex + 1
+          flatNumber= flatNumber - 1
+          continue
           }
 
           keyWithdraws = keyWithdraws.map((item, i) => {
@@ -404,14 +414,25 @@ module.exports.getTime = (req, res, next) => {
       for (let flatNumber = faltsRange[0]; flatNumber <= faltsRange[1]; flatNumber++) {
         if (keyWithdraws.filter((item) => {
 
-          if (item && item.balance === 0) return false
+          if (item && item.balance <= 0) return false
           else return true
         }).length === 0) {
           throw new Error('NotEnoughtBalance')
         }
         if (keyWithdraws[keyIndex].balance === 0) {
+          // if (keyWithdraws.filter((item) => {
+
+          //   if (item && item.balance === 0) return false
+          //   else return true
+          // }).length === 0) {
+          //   throw new Error('NotEnoughtBalance')
+          // }
+           
           if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
           else keyIndex = keyIndex + 1
+          flatNumber= flatNumber - 1
+          continue
+
         }
 
         keyWithdraws = keyWithdraws.map((item, i) => {
