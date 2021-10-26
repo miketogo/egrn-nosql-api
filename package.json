@@ -30,6 +30,7 @@
     "node-fetch": "^3.0.0",
     "node-telegram-bot-api": "^0.54.0",
     "validator": "^13.6.0",
+    "voucher-code-generator": "^1.1.1",
     "winston": "^3.3.3"
   },
   "devDependencies": {

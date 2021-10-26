@@ -43,6 +43,7 @@ const CORS_WHITELIST = [
   app.use(express.json());
   app.use(requestLogger);
   // app.use(cors(corsOption));
+  app.use('/main-api/promo-code', require('./routes/promoCodes'));
   app.use('/main-api/users', require('./routes/users'));
   app.use('/main-api/orders', require('./routes/orders'));
   app.use('/main-api/ros-key', require('./routes/rosReesterKeys'));
