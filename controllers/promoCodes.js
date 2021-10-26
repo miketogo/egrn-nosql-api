@@ -16,15 +16,21 @@ const opts = {
 module.exports.create = (req, res, next) => {
   const {
     amount,
+    customCode,
   } = req.body;
-  let code = voucher_codes.generate({
-    length: 8,
-    count: 1,
-  });
+  let code
+  if (customCode) code = customCode
+  else {
+    code = voucher_codes.generate({
+      length: 8,
+      count: 1,
+    })[0];
+  }
+  
   const realDate = new Date
   let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
   PromoCode.create({
-    code: code[0],
+    code: code,
     amount,
     date,
   })
@@ -34,7 +40,7 @@ module.exports.create = (req, res, next) => {
     .catch((err) => {
       console.log(err)
       if (err.code === 11000) {
-        throw new ConflictError('При код уже существует на сервере');
+        throw new ConflictError('Код уже существует на сервере');
       }
       if (err.name === 'ValidationError') {
         throw new InvalidDataError('Переданы некорректные данные при создании кода');
