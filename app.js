@@ -57,6 +57,7 @@ const CORS_WHITELIST = [
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     // если у ошибки нет статуса, выставляем 500
+    console.log(err)
     const { statusCode = 500, message } = err;
     console.log(err)
     res

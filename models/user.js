@@ -30,6 +30,9 @@ const userSchema = new mongoose.Schema({
             amount: {
                 type: Number,
             },
+            type: {
+                type: String,
+            },
             date: {
                 type: String,
             },

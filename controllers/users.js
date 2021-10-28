@@ -4,7 +4,7 @@ const moment = require('moment-timezone');
 const User = require('../models/user');
 const ConflictError = require('../errors/сonflict-err');
 const InvalidDataError = require('../errors/invalid-data-err');
-
+const NotFoundError = require('../errors/not-found-err')
 
 
 
@@ -52,7 +52,10 @@ module.exports.findByTgId = (req, res, next) => {
         throw new ConflictError('MongoError');
       }
       if (err.name === 'ValidationError') {
-        throw new InvalidDataError('Переданы некорректные данные при создании пользователя');
+        throw new InvalidDataError('Переданы некорректные данные при поиске пользователя');
+      }
+      if (err.message === 'NotFound') {
+        throw new NotFoundError('Пользователь по указанному id не найден');
       }
     })
     .catch(next)

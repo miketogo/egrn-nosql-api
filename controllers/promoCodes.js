@@ -51,6 +51,8 @@ module.exports.create = (req, res, next) => {
 
 
 module.exports.useCode = (req, res, next) => {
+  const realDate = new Date
+  let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
   const {
     telegram_id,
     code
@@ -65,7 +67,12 @@ module.exports.useCode = (req, res, next) => {
         .then((code) => {
           if (code.isUsed === true) throw new Error('CodeIsUsed')
           User.findByIdAndUpdate(user._id, {
-            balance: user.balance + code.amount
+            balance: user.balance + code.amount,
+            payment_history: [...user.payment_history , {
+              date: date,
+              type: "Promo code activation",
+              amount: code.amount,
+            }]
           }, opts)
             .then((UPDUser) => {
               PromoCode.findByIdAndUpdate(code._id, {

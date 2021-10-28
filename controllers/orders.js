@@ -209,7 +209,12 @@ module.exports.create = (req, res, next) => {
 
             })
             User.findByIdAndUpdate(user._id, {
-              balance: user.balance - order_items.length
+              balance: user.balance - order_items.length,
+              payment_history: [...user.payment_history , {
+                date: date,
+                type: "Order",
+                amount: - order_items.length,
+              }]
             }, opts)
               .then(() => {
 
@@ -227,13 +232,9 @@ module.exports.create = (req, res, next) => {
                       order_id: order._id,
                       date
                     }]
-                    payment_history = [...user.payment_history, {
-                      amount: - order_items.length,
-                      date
-                    }]
+                    
                     User.findByIdAndUpdate(user._id, {
-                      order_history,
-                      payment_history
+                      order_history
                     }, opts)
                       .then(() => {
 
