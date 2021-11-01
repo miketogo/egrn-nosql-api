@@ -38,19 +38,16 @@ const userSchema = new mongoose.Schema({
             },
         }
     },
-    order_history: {
-        type: Array,
-        default: [],
-        items: {
-            order_id: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'order'
-            },
-            date: {
-                type: String,
-            },
-        }
-    },
+    order_history: [{
+        order_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'order'
+        },
+        date: {
+            type: String,
+        },
+    }
+    ],
 });
 
 // создаём модель и экспортируем её
