@@ -11,6 +11,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'Не указан',
     },
+    emailVerified:{
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     telegram_id: {
         type: String,
         default: 'Не указан',
