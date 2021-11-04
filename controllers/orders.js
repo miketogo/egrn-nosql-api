@@ -48,7 +48,7 @@ module.exports.create = (req, res, next) => {
   } = req.body;
   rosReesterKey.find({}).orFail(() => new Error('NotFound')).then((keys) => {
     let notZeroKeys = keys.filter((key) => {
-      if (key.balance <= 0) return false
+      if (key.balance <= 0 && key.inactive) return false
       else return true
     })
     if (notZeroKeys.length === 0) throw new Error('AllZeroKeys')
@@ -325,7 +325,7 @@ module.exports.getTime = (req, res, next) => {
   } = req.body;
   rosReesterKey.find({}).orFail(() => new Error('NotFound')).then((keys) => {
     let notZeroKeys = keys.filter((key) => {
-      if (key.balance <= 0) return false
+      if (key.balance <= 0 && key.inactive) return false
       else return true
     })
     if (notZeroKeys.length === 0) throw new Error('AllZeroKeys')
