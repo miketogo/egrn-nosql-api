@@ -13,7 +13,7 @@ const downloadEmailHtml = require('../emails/downloadEmail')
 const jwtSecretPhrase = process.env.JWT_SECRET;
 const jwtEmailSecretPhrase = process.env.JWT_EMAIL_SECRET;
 
-const apiLink = 'https://egrn-api-selenium/'
+const apiLink = 'https://egrn-api-selenium.ru/'
 
 const opts = {
   new: true,
