@@ -212,7 +212,7 @@ module.exports.create = (req, res, next) => {
               balance: user.balance - order_items.length,
               payment_history: [...user.payment_history , {
                 date: date,
-                type: "Order",
+                type: `Оплата заказа по адресу ${object_address}, колличество отчетов ${order_items.length}`,
                 amount: - order_items.length,
               }]
             }, opts)

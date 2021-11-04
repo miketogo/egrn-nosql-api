@@ -70,7 +70,7 @@ module.exports.useCode = (req, res, next) => {
             balance: user.balance + code.amount,
             payment_history: [...user.payment_history , {
               date: date,
-              type: "Promo code activation",
+              type: `Активация промокода ${code.code} на сумму ${code.amount}`,
               amount: code.amount,
             }]
           }, opts)
