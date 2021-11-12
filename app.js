@@ -47,6 +47,7 @@ const CORS_WHITELIST = [
   app.use('/main-api/users', require('./routes/users'));
   app.use('/main-api/orders', require('./routes/orders'));
   app.use('/main-api/ros-key', require('./routes/rosReesterKeys'));
+  app.use('/main-api/address', require('./routes/addresses'));
   // eslint-disable-next-line no-unused-vars
   app.use((req, res) => {
     throw new NotFoundError('Запрашиваемый ресурс не найден');
