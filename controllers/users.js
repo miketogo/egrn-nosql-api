@@ -322,3 +322,41 @@ ${apiLink}download/${order_id}`
 };
 
 
+module.exports.findUserByOrderId = (req, res, next) => {
+  const {
+    order_id
+  } = req.body;
+  User.find().orFail(() => new Error('NotFound'))
+    .then((users) => {
+      let user = users.filter((user) => {
+        if (user.order_history.length === 0) return false
+        else if (user.order_history.filter((order) => {
+          if (order.order_id.toString() === order_id) return true
+          else return false
+        }).length !== 0) return true
+        else return false
+      })
+      if (user.length === 0) throw new Error('NotFoundOrder');
+      if (user.length > 1) throw new Error('MoreThenOneOrder');
+      res.status(200).send({ user: user[0] })
+    })
+    .catch((err) => {
+      console.log(err)
+      if (err.code === 11000) {
+        throw new ConflictError('MongoError');
+      }
+      if (err.name === 'ValidationError') {
+        throw new InvalidDataError('Переданы некорректные данные при поиске пользователя');
+      }
+      if (err.message === 'NotFound') {
+        throw new NotFoundError('Нет пользователей');
+      }
+      if (err.message === 'NotFoundOrder') {
+        throw new NotFoundError('Не найден заказ');
+      }
+      if (err.message === 'MoreThenOneOrder') {
+        throw new ConflictError('Найдено несколько заказов с таким id');
+      }
+    })
+    .catch(next)
+};
