@@ -1,5 +1,6 @@
 const moment = require('moment-timezone');
 const jwt = require('jsonwebtoken');
+const TelegramBot = require('node-telegram-bot-api');
 
 const User = require('../models/user');
 const ConflictError = require('../errors/сonflict-err');
@@ -14,6 +15,9 @@ const jwtSecretPhrase = process.env.JWT_SECRET;
 const jwtEmailSecretPhrase = process.env.JWT_EMAIL_SECRET;
 
 const apiLink = 'https://egrn-api-selenium.ru/'
+
+const token = process.env.TELEGRAM_TOKEN;
+const bot = new TelegramBot(token, { polling: false });
 
 const opts = {
   new: true,
@@ -216,6 +220,7 @@ module.exports.verifyEmail = (req, res, next) => {
   User.findByIdAndUpdate(payload._id, { emailVerified: true }, opts).orFail(() => new Error('NotFound'))
     .populate('order_history.order_id')
     .then((user) => {
+      bot.sendMessage(user.telegram_id, `email подтвержден`);
       if (payload.order_id) {
         if (!user.emailVerified) throw new Error('EmailNotVerified');
         const order = user.order_history.filter((item) => {
