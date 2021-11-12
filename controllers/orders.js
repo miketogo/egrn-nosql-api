@@ -21,17 +21,17 @@ module.exports.create = (req, res, next) => {
 
   async function fetchToSelenium(user_id, order_id) {
 
-    // const body = {
-    //   user_id: user_id,
-    //   order_id: order_id
-    // }
-    // const response = await fetch('http://egrn-api-selenium.ru/create', {
-    //   method: 'post',
-    //   body: JSON.stringify(body),
-    //   headers: { 'Content-Type': 'application/json' }
-    // });
-    // const data = await response.json();
-    // console.log(data);
+    const body = {
+      user_id: user_id,
+      order_id: order_id
+    }
+    const response = await fetch('http://egrn-api-selenium.ru/create', {
+      method: 'post',
+      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await response.json();
+    console.log(data);
   }
 
 
