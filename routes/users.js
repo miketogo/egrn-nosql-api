@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
-  create, findByTgId, getOrdersByTgId, connectEmail, verifyEmail, sendDownloadEmail, findUserByOrderId,
+  create, findByTgId, getOrdersByTgId, connectEmail, verifyEmail, sendDownloadEmail, findUserByOrderId, onNewsLetter, offNewsLetter, 
 } = require('../controllers/users');
 
 router.post('/create', celebrate({
@@ -51,5 +51,17 @@ router.post('/send-download-email', celebrate({
   }),
 }), sendDownloadEmail);
 
+
+router.post('/on-newsletter', celebrate({
+  body: Joi.object().keys({
+    telegram_id: Joi.string().required(),
+  }),
+}), onNewsLetter);
+
+router.post('/off-newsletter', celebrate({
+  body: Joi.object().keys({
+    telegram_id: Joi.string().required(),
+  }),
+}), offNewsLetter);
 
 module.exports = router;

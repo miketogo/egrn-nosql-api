@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         default: false,
     },
+    newsletter: {
+        type: Boolean,
+        required: true,
+        default: true,
+    },
     telegram_id: {
         type: String,
         default: 'Не указан',

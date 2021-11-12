@@ -360,3 +360,43 @@ module.exports.findUserByOrderId = (req, res, next) => {
     })
     .catch(next)
 };
+
+
+module.exports.offNewsLetter = (req, res, next) => {
+  const {
+    telegram_id
+  } = req.body;
+  User.findOneAndUpdate({ telegram_id: telegram_id }, { newsletter: false }, opts).orFail(() => new Error('NotFound'))
+    .then((user) => {
+      res.status(200).send({ user })
+    })    //!! СДЕЛАТЬ ПЕРЕАДРЕАЦИЮ
+    .catch((err) => {
+      if (err.message === 'NotFound') {
+        throw new NotFoundError('Нет пользователя с таким id');
+      }
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new InvalidDataError('Переданы некорректные данные при поиске пользователя по id');
+      }
+    })
+    .catch(next);
+};
+
+
+module.exports.onNewsLetter = (req, res, next) => {
+  const {
+    telegram_id
+  } = req.body;
+  User.findOneAndUpdate({ telegram_id: telegram_id }, { newsletter: true }, opts).orFail(() => new Error('NotFound'))
+    .then((user) => {
+      res.status(200).send({ user })
+    })    //!! СДЕЛАТЬ ПЕРЕАДРЕАЦИЮ
+    .catch((err) => {
+      if (err.message === 'NotFound') {
+        throw new NotFoundError('Нет пользователя с таким id');
+      }
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new InvalidDataError('Переданы некорректные данные при поиске пользователя по id');
+      }
+    })
+    .catch(next);
+};

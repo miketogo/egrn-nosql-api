@@ -14,27 +14,33 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    region:{
+        type: String,
+        default: 'Не указан',
+    },
     house: {
         type: String,
         required: true,
     },
     flats: {
         type: String,
-        required: true,
+    },
+    non_residential_flats: {
+        type: String,
     },
     status: {
         type: String,
         default: 'Создан',
         required: true,
     },
+    cadastral: {
+        type: String,
+        default: 'Не указан',
+    },
     order_items:  [{
             appartment: {
-                type: Number,
-                required: true,
-            },
-            cadastral: {
                 type: String,
-                default: 'Не указан',
+                required: true,
             },
             rosreestr_key: {
                 type: String,

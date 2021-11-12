@@ -11,15 +11,18 @@ router.post('/create', celebrate({
     object_address: Joi.string().required(),
     town: Joi.string().required(),
     street: Joi.string().required(),
+    region: Joi.string(),
     house: Joi.string().required(),
-    flats: Joi.string().required(),
+    flats: Joi.string(),
     single_cadastral: Joi.string(),
+    non_residential_flats:  Joi.string(),
   }),
 }), create);
 
 router.patch('/get-time', celebrate({
   body: Joi.object().keys({
     flats: Joi.string().required(),
+    non_residential_flats:  Joi.string(),
   }),
 }), getTime);
 
