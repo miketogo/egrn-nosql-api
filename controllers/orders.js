@@ -21,17 +21,17 @@ module.exports.create = (req, res, next) => {
 
   async function fetchToSelenium(user_id, order_id) {
 
-    const body = {
-      user_id: user_id,
-      order_id: order_id
-    }
-    const response = await fetch('http://egrn-api-selenium.ru/create', {
-      method: 'post',
-      body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json' }
-    });
-    const data = await response.json();
-    console.log(data);
+    // const body = {
+    //   user_id: user_id,
+    //   order_id: order_id
+    // }
+    // const response = await fetch('http://egrn-api-selenium.ru/create', {
+    //   method: 'post',
+    //   body: JSON.stringify(body),
+    //   headers: { 'Content-Type': 'application/json' }
+    // });
+    // const data = await response.json();
+    // console.log(data);
   }
 
 
@@ -46,7 +46,7 @@ module.exports.create = (req, res, next) => {
     house,
     flats = '',
     non_residential_flats = '',
-    single_cadastral = null,
+    cadastral = null,
   } = req.body;
   if (flats === '' && non_residential_flats === '') throw new Error('NoFlatsInOrder')
   if (flats !== '' && non_residential_flats === '') {
@@ -85,7 +85,6 @@ module.exports.create = (req, res, next) => {
       if (flats.replace(/\d/g, '').length === 0) {
         let item = {
           appartment: Number(flats),
-          cadastral: single_cadastral,
           rosreestr_key: keyWithdraws[0].key
         }
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -225,6 +224,7 @@ module.exports.create = (req, res, next) => {
                   Order.create({
                     object_address,
                     town,
+                    cadastral,
                     street,
                     region,
                     house,
@@ -340,7 +340,6 @@ module.exports.create = (req, res, next) => {
       if (non_residential_flats.replace(/\d/g, '').length === 0) {
         let item = {
           appartment: Number(non_residential_flats) + '-Н',
-          cadastral: single_cadastral,
           rosreestr_key: keyWithdraws[0].key
         }
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -481,6 +480,7 @@ module.exports.create = (req, res, next) => {
                     object_address,
                     town,
                     street,
+                    cadastral,
                     region,
                     house,
                     flats,
@@ -594,7 +594,6 @@ module.exports.create = (req, res, next) => {
       if (flats.replace(/\d/g, '').length === 0) {
         let item = {
           appartment: Number(flats),
-          cadastral: single_cadastral,
           rosreestr_key: keyWithdraws[0].key
         }
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -698,7 +697,7 @@ module.exports.create = (req, res, next) => {
       if (non_residential_flats.replace(/\d/g, '').length === 0) {
         let item = {
           appartment: Number(non_residential_flats) + '-Н',
-          cadastral: single_cadastral,
+      
           rosreestr_key: keyWithdraws[0].key
         }
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -837,6 +836,7 @@ module.exports.create = (req, res, next) => {
 
                   Order.create({
                     object_address,
+                    cadastral,
                     town,
                     street,
                     region,
