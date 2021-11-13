@@ -156,10 +156,10 @@ module.exports.connectEmail = (req, res, next) => {
         .then((upd_user) => {
           let emailToken
           if (order_id !== null) {
-            emailToken = jwt.sign({ _id: upd_user._id, order_id: order_id }, jwtEmailSecretPhrase, { expiresIn: '7d' });
+            emailToken = jwt.sign({ _id: upd_user._id, order_id: order_id, email: email }, jwtEmailSecretPhrase, { expiresIn: '7d' });
 
           }
-          else emailToken = jwt.sign({ _id: upd_user._id }, jwtEmailSecretPhrase, { expiresIn: '7d' });
+          else emailToken = jwt.sign({ _id: upd_user._id, email: email }, jwtEmailSecretPhrase, { expiresIn: '7d' });
           const title = 'Подтвердите адресс электронной почты'
           const text = `Подтвердите адрес электронной почты
               
@@ -217,45 +217,73 @@ module.exports.verifyEmail = (req, res, next) => {
     // отправим ошибку, если не получилось
     throw new AuthError('Неправильный токен');
   }
-  User.findByIdAndUpdate(payload._id, { emailVerified: true }, opts).orFail(() => new Error('NotFound'))
-    .populate('order_history.order_id')
+  User.findById(payload._id).orFail(() => new Error('USERNotFound'))
     .then((user) => {
-      bot.sendMessage(user.telegram_id, `email подтвержден`);
-      if (payload.order_id) {
-        if (!user.emailVerified) throw new Error('EmailNotVerified');
-        const order = user.order_history.filter((item) => {
+      if (user.emailVerified) throw new Error('EmailVerified')
+      if (!user.email !== payload.email) throw new Error('NotRealMail');
+      else {
+        User.findByIdAndUpdate(payload._id, { emailVerified: true }, opts).orFail(() => new Error('NotFound'))
+          .populate('order_history.order_id')
+          .then((user) => {
+            bot.sendMessage(user.telegram_id, `email подтвержден`);
+            if (payload.order_id) {
+              if (!user.emailVerified) throw new Error('EmailNotVerified');
+              const order = user.order_history.filter((item) => {
 
-          if (item.order_id._id.toString() === payload.order_id) return true
-          else return false
-        })
-        console.log(order)
-        const title = `Отчёт из ЕГРН по адресу "${order[0].order_id.object_address}"`
-        const text = `Отчёт из ЕГРН
-  Дата: ${order[0].date}
-  Адрес: "${order[0].order_id.object_address}"
-  Диапазон квартир: ${order[0].order_id.flats}
-              
-  Перейдите по ссылке чтобы скачать документ EXCEL
-  ${apiLink}download/${payload.order_id}`
+                if (item.order_id._id.toString() === payload.order_id) return true
+                else return false
+              })
+              console.log(order)
+              const title = `Отчёт из ЕГРН по адресу "${order[0].order_id.object_address}"`
+              const text = `Отчёт из ЕГРН
+Дата: ${order[0].date}
+Адрес: "${order[0].order_id.object_address}"
+Диапазон квартир: ${order[0].order_id.flats}
+                  
+Перейдите по ссылке чтобы скачать документ EXCEL
+${apiLink}download/${payload.order_id}`
 
-        const massage = {
-          to: user.email,
-          subject: title,
-          text: text,
-          html: `${downloadEmailHtml({
-            order_id: payload.order_id,
-            link: apiLink,
-            date: order[0].date,
-            address: order[0].order_id.object_address,
-            flats: order[0].order_id.flats,
-          })}`
-        }
-        mailer(massage)
+              const massage = {
+                to: user.email,
+                subject: title,
+                text: text,
+                html: `${downloadEmailHtml({
+                  order_id: payload.order_id,
+                  link: apiLink,
+                  date: order[0].date,
+                  address: order[0].order_id.object_address,
+                  flats: order[0].order_id.flats,
+                })}`
+              }
+              mailer(massage)
 
+            }
+            res.redirect("https://t.me/Test_my_11_bot/")
+          })    //!! СДЕЛАТЬ ПЕРЕАДРЕАЦИЮ
+          .catch((err) => {
+            if (err.message === 'EmailVerified') {
+              throw new ConflictError('Email уже подтвержден');
+            }
+            if (err.message === 'NotRealMail') {
+              throw new ConflictError(`Не правильный email. Пожалуйста подтвердите новый email по письму отправленному на ${payload.email}`);
+            }
+            if (err.message === 'NotFound') {
+              throw new NotFoundError('Нет пользователя с таким id');
+            }
+            if (err.name === 'ValidationError' || err.name === 'CastError') {
+              throw new InvalidDataError('Переданы некорректные данные при поиске пользователя по id');
+            }
+          })
+          .catch(next);
       }
-      res.redirect("https://t.me/Test_my_11_bot/")
-    })    //!! СДЕЛАТЬ ПЕРЕАДРЕАЦИЮ
+    })
     .catch((err) => {
+      if (err.message === 'EmailVerified') {
+        throw new ConflictError('Email уже подтвержден');
+      }
+      if (err.message === 'NotRealMail') {
+        throw new ConflictError(`Не правильный email. Пожалуйста подтвердите новый email по письму отправленному на ${payload.email}`);
+      }
       if (err.message === 'NotFound') {
         throw new NotFoundError('Нет пользователя с таким id');
       }
@@ -264,6 +292,7 @@ module.exports.verifyEmail = (req, res, next) => {
       }
     })
     .catch(next);
+
 };
 
 module.exports.sendDownloadEmail = (req, res, next) => {
