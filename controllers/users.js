@@ -220,7 +220,7 @@ module.exports.verifyEmail = (req, res, next) => {
   User.findById(payload._id).orFail(() => new Error('USERNotFound'))
     .then((user) => {
       if (user.emailVerified) throw new Error('EmailVerified')
-      if (!user.email !== payload.email) throw new Error('NotRealMail');
+      if (user.email !== payload.email) throw new Error('NotRealMail');
       else {
         User.findByIdAndUpdate(payload._id, { emailVerified: true }, opts).orFail(() => new Error('NotFound'))
           .populate('order_history.order_id')
