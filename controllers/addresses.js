@@ -18,12 +18,14 @@ module.exports.addAddress = (req, res, next) => {
         region = 'Не указан',
         house,
         last_flat,
+        cadastral,
         last_non_residential_flat,
     } = req.body;
     Address.create({
         town,
         street,
         region,
+        cadastral,
         house,
         last_flat,
         last_non_residential_flat,
@@ -49,7 +51,7 @@ module.exports.findAddress = (req, res, next) => {
     Address.find().orFail(() => new Error('NotFound'))
         .then((addresses) => {
             let address = addresses.filter((item) => {
-                if (item.town === town && item.street === street && item.region === region && item.house === house) return true
+                if (item.town.toLowerCase() === town.toLowerCase() && item.street.toLowerCase() === street.toLowerCase() && item.region.toLowerCase() === region.toLowerCase() && item.house.toLowerCase() === house.toLowerCase()) return true
                 else return false
             })
             if (address.length === 0) throw new Error('AddressNotFound')

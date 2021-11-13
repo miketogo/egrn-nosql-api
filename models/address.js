@@ -26,6 +26,10 @@ const addressSchema = new mongoose.Schema({
         type: String,
         default: '0',
     },
+    cadastral: {
+        type: String,
+        required: true,
+    },
 
 });
 
