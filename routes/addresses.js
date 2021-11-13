@@ -18,6 +18,7 @@ router.post('/add', celebrate({
 
 router.get('/find', celebrate({
   body: Joi.object().keys({
+    cadastral: Joi.string().required(),
     town: Joi.string().required(),
     street: Joi.string().required(),
     region: Joi.string(),

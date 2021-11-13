@@ -45,13 +45,14 @@ module.exports.findAddress = (req, res, next) => {
     const {
         town,
         street,
+        cadastral,
         region = 'Не указан',
         house,
     } = req.body;
     Address.find().orFail(() => new Error('NotFound'))
         .then((addresses) => {
             let address = addresses.filter((item) => {
-                if (item.town.toLowerCase() === town.toLowerCase() && item.street.toLowerCase() === street.toLowerCase() && item.region.toLowerCase() === region.toLowerCase() && item.house.toLowerCase() === house.toLowerCase()) return true
+                if (item.town.toLowerCase() === town.toLowerCase() && item.street.toLowerCase() === street.toLowerCase() && item.region.toLowerCase() === region.toLowerCase() && item.house.toLowerCase() === house.toLowerCase() || item.cadastral === cadastral) return true
                 else return false
             })
             if (address.length === 0) throw new Error('AddressNotFound')
