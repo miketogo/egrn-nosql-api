@@ -146,7 +146,7 @@ module.exports.connectEmail = (req, res, next) => {
     telegram_id
   }).orFail(() => new Error('NotFound'))
     .then((user) => {
-      if (user.emailVerified) throw new Error('EmailAlreadyVerified');
+      // if (user.emailVerified) throw new Error('EmailAlreadyVerified');
       User.findOneAndUpdate({
         telegram_id
       }, {
