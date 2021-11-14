@@ -12,6 +12,8 @@ router.post('/add', celebrate({
     house: Joi.string().required(),
     last_flat: Joi.string(),
     last_non_residential_flat: Joi.string(),
+    house_internal_letter: Joi.string(),
+    house_internal_number: Joi.string(),
   }),
 }), addAddress);
 
@@ -21,6 +23,8 @@ router.get('/find', celebrate({
     street: Joi.string().required(),
     region: Joi.string(),
     house: Joi.string().required(),
+    house_internal_letter: Joi.string(),
+    house_internal_number: Joi.string(),
   }),
 }), findAddress);
 

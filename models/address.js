@@ -26,6 +26,14 @@ const addressSchema = new mongoose.Schema({
         type: String,
         default: '0',
     },
+    house_internal_number: {
+        type: String,
+        default: 'Не указан',
+    },
+    house_internal_letter: {
+        type: String,
+        default: 'Не указан',
+    },
 
 });
 

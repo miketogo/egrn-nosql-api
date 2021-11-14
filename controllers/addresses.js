@@ -19,6 +19,8 @@ module.exports.addAddress = (req, res, next) => {
         house,
         last_flat,
         last_non_residential_flat,
+        house_internal_letter = 'Не указан',
+        house_internal_number = 'Не указан',
     } = req.body;
     Address.create({
         town,
@@ -27,6 +29,8 @@ module.exports.addAddress = (req, res, next) => {
         house,
         last_flat,
         last_non_residential_flat,
+        house_internal_letter,
+        house_internal_number
     })
         .then((address) => {
             res.status(200).send({ address })
@@ -45,6 +49,8 @@ module.exports.findAddress = (req, res, next) => {
         street,
         region = 'Не указан',
         house,
+        house_internal_letter = 'Не указан',
+        house_internal_number = 'Не указан',
     } = req.body;
     Address.find().orFail(() => new Error('NotFound'))
         .then((addresses) => {

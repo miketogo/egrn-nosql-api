@@ -16,6 +16,8 @@ router.post('/create', celebrate({
     flats: Joi.string(),
     cadastral: Joi.string(),
     non_residential_flats:  Joi.string(),
+    house_internal_letter: Joi.string(),
+    house_internal_number: Joi.string(),
   }),
 }), create);
 

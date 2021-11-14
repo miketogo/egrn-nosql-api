@@ -33,6 +33,14 @@ const orderSchema = new mongoose.Schema({
         default: 'Создан',
         required: true,
     },
+    house_internal_number: {
+        type: String,
+        default: 'Не указан',
+    },
+    house_internal_letter: {
+        type: String,
+        default: 'Не указан',
+    },
     cadastral: {
         type: String,
         default: 'Не указан',
