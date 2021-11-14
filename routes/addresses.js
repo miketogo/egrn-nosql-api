@@ -10,6 +10,7 @@ router.post('/add', celebrate({
     street: Joi.string().required(),
     region: Joi.string(),
     house: Joi.string().required(),
+    cadastral: Joi.string().required(),
     last_flat: Joi.string(),
     last_non_residential_flat: Joi.string(),
     house_internal_letter: Joi.string(),
@@ -19,6 +20,7 @@ router.post('/add', celebrate({
 
 router.get('/find', celebrate({
   body: Joi.object().keys({
+    cadastral: Joi.string().required(),
     town: Joi.string().required(),
     street: Joi.string().required(),
     region: Joi.string(),

@@ -47,6 +47,8 @@ module.exports.create = (req, res, next) => {
     flats = '',
     non_residential_flats = '',
     cadastral = null,
+    house_internal_letter = 'Не указан',
+    house_internal_number = 'Не указан',
   } = req.body;
   if (flats === '' && non_residential_flats === '') throw new Error('NoFlatsInOrder')
   if (flats !== '' && non_residential_flats === '') {
@@ -232,6 +234,8 @@ module.exports.create = (req, res, next) => {
                     non_residential_flats,
                     order_items,
                     date,
+                    house_internal_number,
+                    house_internal_letter,
                   })
                     .then((order) => {
                       order_history = [...user.order_history, {
@@ -487,6 +491,8 @@ module.exports.create = (req, res, next) => {
                     non_residential_flats,
                     order_items,
                     date,
+                    house_internal_number,
+                    house_internal_letter,
                   })
                     .then((order) => {
                       order_history = [...user.order_history, {
@@ -845,6 +851,8 @@ module.exports.create = (req, res, next) => {
                     non_residential_flats,
                     order_items,
                     date,
+                    house_internal_number,
+                    house_internal_letter,
                   })
                     .then((order) => {
                       order_history = [...user.order_history, {
