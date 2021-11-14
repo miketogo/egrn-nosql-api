@@ -26,7 +26,6 @@ const addressSchema = new mongoose.Schema({
         type: String,
         default: '0',
     },
-<<<<<<< HEAD
     house_internal_number: {
         type: String,
         default: 'Не указан',
@@ -34,11 +33,10 @@ const addressSchema = new mongoose.Schema({
     house_internal_letter: {
         type: String,
         default: 'Не указан',
-=======
+    },
     cadastral: {
         type: String,
         required: true,
->>>>>>> 6f590bafedc72f9c106081b69f6db8a2da714865
     },
 
 });
