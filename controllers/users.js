@@ -98,6 +98,10 @@ module.exports.getOrdersByTgId = (req, res, next) => {
           flats: item.order_id.flats,
           order_status: item.order_id.status,
           items_length: item.order_id.order_items.length,
+          cadastral: item.order_id.cadastral,
+          house_internal_letter: item.order_id.house_internal_letter,
+          house_internal_number: item.order_id.house_internal_number,
+          non_residential_flats: item.order_id.non_residential_flats,
           ready_items: item.order_id.order_items.filter((order_item) => {
             if (order_item.status.toLowerCase() === 'завершена') return true
             else return false
