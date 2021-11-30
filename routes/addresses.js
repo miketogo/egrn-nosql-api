@@ -15,6 +15,7 @@ router.post('/add', celebrate({
     last_non_residential_flat: Joi.string(),
     house_internal_letter: Joi.string(),
     house_internal_number: Joi.string(),
+    house_internal_building: Joi.string(),
   }),
 }), addAddress);
 
@@ -27,6 +28,7 @@ router.get('/find', celebrate({
     house: Joi.string().required(),
     house_internal_letter: Joi.string(),
     house_internal_number: Joi.string(),
+    house_internal_building: Joi.string(),
   }),
 }), findAddress);
 

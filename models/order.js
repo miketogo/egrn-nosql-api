@@ -37,6 +37,10 @@ const orderSchema = new mongoose.Schema({
         type: String,
         default: 'Не указан',
     },
+    house_internal_building:{
+        type: String,
+        default: 'Не указан',
+    },
     house_internal_letter: {
         type: String,
         default: 'Не указан',

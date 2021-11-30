@@ -34,6 +34,10 @@ const addressSchema = new mongoose.Schema({
         type: String,
         default: 'Не указан',
     },
+    house_internal_building:{
+        type: String,
+        default: 'Не указан',
+    },
     cadastral: {
         type: String,
         required: true,

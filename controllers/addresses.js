@@ -22,6 +22,7 @@ module.exports.addAddress = (req, res, next) => {
         last_non_residential_flat,
         house_internal_letter = 'Не указан',
         house_internal_number = 'Не указан',
+        house_internal_building = 'Не указан',
     } = req.body;
     Address.create({
         town,
@@ -32,7 +33,8 @@ module.exports.addAddress = (req, res, next) => {
         last_flat,
         last_non_residential_flat,
         house_internal_letter,
-        house_internal_number
+        house_internal_number, 
+        house_internal_building
     })
         .then((address) => {
             res.status(200).send({ address })
@@ -54,11 +56,12 @@ module.exports.findAddress = (req, res, next) => {
         house,
         house_internal_letter = 'Не указан',
         house_internal_number = 'Не указан',
+        house_internal_building = 'Не указан',
     } = req.body;
     Address.find().orFail(() => new Error('NotFound'))
         .then((addresses) => {
             let address = addresses.filter((item) => {
-                if (item.town.toLowerCase() === town.toLowerCase() && item.street.toLowerCase() === street.toLowerCase() && item.region.toLowerCase() === region.toLowerCase() && item.house.toLowerCase() === house.toLowerCase() && item.cadastral === cadastral && item.house_internal_letter.toLowerCase() === house_internal_letter.toLowerCase() && item.house_internal_number.toLowerCase() === house_internal_number.toLowerCase()) return true
+                if (item.town.toLowerCase() === town.toLowerCase() && item.street.toLowerCase() === street.toLowerCase() && item.region.toLowerCase() === region.toLowerCase() && item.house.toLowerCase() === house.toLowerCase() && item.cadastral === cadastral && item.house_internal_letter.toLowerCase() === house_internal_letter.toLowerCase() && item.house_internal_number.toLowerCase() === house_internal_number.toLowerCase() && item.house_internal_building.toLowerCase() === house_internal_building.toLowerCase()) return true
                 else return false
             })
             if (address.length === 0) throw new Error('AddressNotFound')
