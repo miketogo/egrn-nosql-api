@@ -47,8 +47,9 @@ module.exports.create = (req, res, next) => {
     .then((user) => {
       devBot.sendMessage(-760942865, `
 Новый пользователь
-TG_ID: ${telegram_id}
-PHONE: ${phone_number}    
+
+id телеграма: ${telegram_id}
+телефон: ${phone_number}    
 `);
 
       res.status(200).send({ user })

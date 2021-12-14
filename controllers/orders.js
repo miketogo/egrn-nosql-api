@@ -239,11 +239,12 @@ module.exports.create = (req, res, next) => {
 
                   devBot.sendMessage(-760942865, `
 Новый заказ
-object_address: ${object_address}
-lats: ${flats}
-non_residential_flats: ${non_residential_flats}
-user._id: ${user._id}   
-user_balance: ${user.balance - order_items.length}    
+
+Адресс: ${object_address}
+Жилые: ${flats}
+Нежилые: ${non_residential_flats}
+id пользователя: ${user._id}   
+баланс пользователя: ${user.balance - order_items.length}       
                                     `);
                   Order.create({
                     object_address,
@@ -507,11 +508,12 @@ user_balance: ${user.balance - order_items.length}
 
                   devBot.sendMessage(-760942865, `
 Новый заказ
-object_address: ${object_address}
-lats: ${flats}
-non_residential_flats: ${non_residential_flats}
-user._id: ${user._id}   
-user_balance: ${user.balance - order_items.length}    
+
+Адресс: ${object_address}
+Жилые: ${flats}
+Нежилые: ${non_residential_flats}
+id пользователя: ${user._id}   
+баланс пользователя: ${user.balance - order_items.length}   
                                     `);
 
                   Order.create({
@@ -879,11 +881,12 @@ user_balance: ${user.balance - order_items.length}
 
                   devBot.sendMessage(-760942865, `
 Новый заказ
-object_address: ${object_address}
-lats: ${flats}
-non_residential_flats: ${non_residential_flats}
-user._id: ${user._id}   
-user_balance: ${user.balance - order_items.length}    
+
+Адресс: ${object_address}
+Жилые: ${flats}
+Нежилые: ${non_residential_flats}
+id пользователя: ${user._id}   
+баланс пользователя: ${user.balance - order_items.length}   
                                     `);
 
                   Order.create({
