@@ -44,7 +44,7 @@ router.get('/email-check/:token', celebrate({
   }),
 }), verifyEmail);
 
-router.get('/newsletter:token', celebrate({
+router.get('/newsletter/:token', celebrate({
   // валидируем параметры
   params: Joi.object().keys({
     token: Joi.string().min(3).required(),
