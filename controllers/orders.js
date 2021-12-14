@@ -1,5 +1,6 @@
 const moment = require('moment-timezone');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const TelegramBot = require('node-telegram-bot-api');
 
 
 const rosReesterKey = require('../models/rosReesterKey')
@@ -14,6 +15,13 @@ const opts = {
   new: true,
   runValidators: true,
 };
+
+
+
+const devBotToken = process.env.DEV_TELEGRAM_TOKEN;
+const devBot = new TelegramBot(devBotToken, { polling: false });
+
+
 
 
 module.exports.create = (req, res, next) => {
@@ -202,7 +210,8 @@ module.exports.create = (req, res, next) => {
                 rosReesterKey.findById(item._id)
                   .then((realKeyData) => {
                     rosReesterKey.findByIdAndUpdate(item._id, {
-                      balance: realKeyData.balance - (prevKeyData[0].balance - item.balance)
+                      balance: realKeyData.balance - (prevKeyData[0].balance - item.balance),
+                      recent_change: dateMark,
                     })
                       .then((key) => {
                         console.log("multiFlatRes", key)
@@ -222,10 +231,20 @@ module.exports.create = (req, res, next) => {
                   date: date,
                   type: `Оплата заказа по адресу ${object_address}, колличество отчетов ${order_items.length}`,
                   amount: - order_items.length,
-                }]
+                }],
+                recent_change: dateMark,
               }, opts)
                 .then(() => {
 
+
+                  devBot.sendMessage(-760942865, `
+Новый заказ
+object_address: ${object_address}
+lats: ${flats}
+non_residential_flats: ${non_residential_flats}
+user._id: ${user._id}   
+user_balance: ${user.balance - order_items.length}    
+                                    `);
                   Order.create({
                     object_address,
                     town,
@@ -460,7 +479,8 @@ module.exports.create = (req, res, next) => {
                 rosReesterKey.findById(item._id)
                   .then((realKeyData) => {
                     rosReesterKey.findByIdAndUpdate(item._id, {
-                      balance: realKeyData.balance - (prevKeyData[0].balance - item.balance)
+                      balance: realKeyData.balance - (prevKeyData[0].balance - item.balance),
+                      recent_change: dateMark,
                     })
                       .then((key) => {
                         console.log("multiFlatRes", key)
@@ -480,9 +500,19 @@ module.exports.create = (req, res, next) => {
                   date: date,
                   type: `Оплата заказа по адресу ${object_address}, колличество отчетов ${order_items.length}`,
                   amount: - order_items.length,
-                }]
+                }],
+                recent_change: dateMark,
               }, opts)
                 .then(() => {
+
+                  devBot.sendMessage(-760942865, `
+Новый заказ
+object_address: ${object_address}
+lats: ${flats}
+non_residential_flats: ${non_residential_flats}
+user._id: ${user._id}   
+user_balance: ${user.balance - order_items.length}    
+                                    `);
 
                   Order.create({
                     object_address,
@@ -821,7 +851,8 @@ module.exports.create = (req, res, next) => {
                 rosReesterKey.findById(item._id)
                   .then((realKeyData) => {
                     rosReesterKey.findByIdAndUpdate(item._id, {
-                      balance: realKeyData.balance - (prevKeyData[0].balance - item.balance)
+                      balance: realKeyData.balance - (prevKeyData[0].balance - item.balance),
+                      recent_change: dateMark,
                     })
                       .then((key) => {
                         console.log("multiFlatRes", key)
@@ -841,9 +872,19 @@ module.exports.create = (req, res, next) => {
                   date: date,
                   type: `Оплата заказа по адресу ${object_address}, колличество отчетов ${order_items.length}`,
                   amount: - order_items.length,
-                }]
+                }],
+                recent_change: dateMark,
               }, opts)
                 .then(() => {
+
+                  devBot.sendMessage(-760942865, `
+Новый заказ
+object_address: ${object_address}
+lats: ${flats}
+non_residential_flats: ${non_residential_flats}
+user._id: ${user._id}   
+user_balance: ${user.balance - order_items.length}    
+                                    `);
 
                   Order.create({
                     object_address,

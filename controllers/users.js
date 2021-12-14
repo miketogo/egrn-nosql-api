@@ -21,10 +21,7 @@ const token = process.env.TELEGRAM_TOKEN;
 const bot = new TelegramBot(token, { polling: false });
 
 const devBotToken = process.env.DEV_TELEGRAM_TOKEN;
-const devIDS = [
-  '388856114',
-  '435127720'
-]
+
 const devBot = new TelegramBot(devBotToken, { polling: false });
 
 const opts = {
@@ -48,14 +45,12 @@ module.exports.create = (req, res, next) => {
     recent_change: dateMark,
   })
     .then((user) => {
-      devIDS.forEach((id)=>{
-        devBot.sendMessage(id, `
+      devBot.sendMessage(-760942865, `
 Новый пользователь
 TG_ID: ${telegram_id}
 PHONE: ${phone_number}    
 `);
-      })
-      
+
       res.status(200).send({ user })
     })
     .catch((err) => {
