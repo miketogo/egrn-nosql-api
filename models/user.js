@@ -58,6 +58,9 @@ const userSchema = new mongoose.Schema({
         },
     }
     ],
+    recent_change: {
+        type: String,
+    }
 });
 
 // создаём модель и экспортируем её

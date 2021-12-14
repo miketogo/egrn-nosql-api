@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 // Опишем схему:
 const addressSchema = new mongoose.Schema({
+    failed_verification: {
+        type: Boolean,
+        required: true,
+        default: true,
+    },
     town: {
         type: String,
         required: true,
@@ -34,7 +39,7 @@ const addressSchema = new mongoose.Schema({
         type: String,
         default: 'Не указан',
     },
-    house_internal_building:{
+    house_internal_building: {
         type: String,
         default: 'Не указан',
     },

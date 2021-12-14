@@ -15,9 +15,17 @@ const jwtSecretPhrase = process.env.JWT_SECRET;
 const jwtEmailSecretPhrase = process.env.JWT_EMAIL_SECRET;
 
 const apiLink = 'https://egrn-api-selenium.ru/'
+const botLink = 'https://t.me/Test_my_11_bot/'
 
 const token = process.env.TELEGRAM_TOKEN;
 const bot = new TelegramBot(token, { polling: false });
+
+const devBotToken = process.env.DEV_TELEGRAM_TOKEN;
+const devIDS = [
+  '388856114',
+  '435127720'
+]
+const devBot = new TelegramBot(devBotToken, { polling: false });
 
 const opts = {
   new: true,
@@ -32,12 +40,22 @@ module.exports.create = (req, res, next) => {
   } = req.body;
   const realDate = new Date
   let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
+  let dateMark = moment(realDate.toISOString()).tz("Europe/Moscow").format('x')
   User.create({
     telegram_id,
     phone_number,
     reg_date: date,
+    recent_change: dateMark,
   })
     .then((user) => {
+      devIDS.forEach((id)=>{
+        devBot.sendMessage(id, `
+Новый пользователь
+TG_ID: ${telegram_id}
+PHONE: ${phone_number}    
+`);
+      })
+      
       res.status(200).send({ user })
     })
     .catch((err) => {
@@ -262,7 +280,7 @@ ${apiLink}download/${payload.order_id}`
               mailer(massage)
 
             }
-            res.redirect("https://t.me/Test_my_11_bot/")
+            res.redirect(botLink)
           })    //!! СДЕЛАТЬ ПЕРЕАДРЕАЦИЮ
           .catch((err) => {
             if (err.message === 'EmailVerified') {
@@ -316,6 +334,7 @@ module.exports.sendDownloadEmail = (req, res, next) => {
         if (item.order_id._id.toString() === order_id) return true
         else return false
       })
+      let emailToken = jwt.sign({ _id: user._id, email: user.email, type: 'newsletter' }, jwtEmailSecretPhrase, { expiresIn: '7d' });
       console.log(order)
       const title = `Отчёт из ЕГРН по адресу "${order[0].order_id.object_address}"`
       const text = `Отчёт из ЕГРН
@@ -336,6 +355,7 @@ ${apiLink}download/${order_id}`
           date: order[0].date,
           address: order[0].order_id.object_address,
           flats: order[0].order_id.flats,
+          token: emailToken,
         })}`
       }
       mailer(massage)
@@ -438,3 +458,56 @@ module.exports.onNewsLetter = (req, res, next) => {
     })
     .catch(next);
 };
+
+module.exports.offNewsLetterByEmail = (req, res, next) => {
+  const { token } = req.params
+  try {
+    // попытаемся верифицировать токен
+    payload = jwt.verify(token, jwtEmailSecretPhrase);
+  } catch (err) {
+    // отправим ошибку, если не получилось
+    throw new AuthError('Неправильный токен');
+  }
+  User.findById(payload._id).orFail(() => new Error('NotFound'))
+    .then((user) => {
+      if (user.email !== payload.email) throw new Error('NotRealMail');
+      else {
+        User.findByIdAndUpdate(payload._id, { newsletter: false }, opts).orFail(() => new Error('NotFound'))
+
+          .then((user) => {
+            bot.sendMessage(user.telegram_id, `Рассылка отключена`);
+            res.redirect(botLink)
+          })
+          .catch((err) => {
+            if (err.message === 'EmailVerified') {
+              throw new ConflictError('Email уже подтвержден');
+            }
+            if (err.message === 'NotRealMail') {
+              throw new ConflictError(`Не правильный email.`);
+            }
+            if (err.message === 'NotFound') {
+              throw new NotFoundError('Нет пользователя с таким id');
+            }
+            if (err.name === 'ValidationError' || err.name === 'CastError') {
+              throw new InvalidDataError('Переданы некорректные данные при поиске пользователя по id');
+            }
+          })
+          .catch(next);
+      }
+    })
+    .catch((err) => {
+      if (err.message === 'EmailVerified') {
+        throw new ConflictError('Email уже подтвержден');
+      }
+      if (err.message === 'NotRealMail') {
+        throw new ConflictError(`Не правильный email.`);
+      }
+      if (err.message === 'NotFound') {
+        throw new NotFoundError('Нет пользователя с таким id');
+      }
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new InvalidDataError('Переданы некорректные данные при поиске пользователя по id');
+      }
+    })
+    .catch(next);
+}

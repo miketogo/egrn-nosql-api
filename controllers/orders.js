@@ -51,6 +51,8 @@ module.exports.create = (req, res, next) => {
     house_internal_number = 'Не указан',
     house_internal_building = 'Не указан',
   } = req.body;
+  const nowDate = new Date
+  let dateMark = moment(nowDate.toISOString()).tz("Europe/Moscow").format('x')
   if (flats === '' && non_residential_flats === '') throw new Error('NoFlatsInOrder')
   if (flats !== '' && non_residential_flats === '') {
     rosReesterKey.find({}).orFail(() => new Error('NotFound')).then((keys) => {

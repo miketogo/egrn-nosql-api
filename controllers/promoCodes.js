@@ -53,6 +53,7 @@ module.exports.create = (req, res, next) => {
 module.exports.useCode = (req, res, next) => {
   const realDate = new Date
   let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
+  let dateMark = moment(realDate.toISOString()).tz("Europe/Moscow").format('x')
   const {
     telegram_id,
     code
@@ -72,7 +73,8 @@ module.exports.useCode = (req, res, next) => {
               date: date,
               type: `Активация промокода ${code.code} на сумму ${code.amount}`,
               amount: code.amount,
-            }]
+            }],
+            recent_change: dateMark,
           }, opts)
             .then((UPDUser) => {
               PromoCode.findByIdAndUpdate(code._id, {

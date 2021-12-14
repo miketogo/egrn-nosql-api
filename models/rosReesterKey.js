@@ -19,6 +19,9 @@ const rosReesterKeySchema = new mongoose.Schema({
     date: {
         type: String,
         required: true,
+    },
+    recent_change: {
+        type: String,
     }
 });
 

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
-  create, findByTgId, getOrdersByTgId, connectEmail, verifyEmail, sendDownloadEmail, findUserByOrderId, onNewsLetter, offNewsLetter, 
+  offNewsLetterByEmail, create, findByTgId, getOrdersByTgId, connectEmail, verifyEmail, sendDownloadEmail, findUserByOrderId, onNewsLetter, offNewsLetter, 
 } = require('../controllers/users');
 
 router.post('/create', celebrate({
@@ -43,6 +43,13 @@ router.get('/email-check/:token', celebrate({
     token: Joi.string().min(3).required(),
   }),
 }), verifyEmail);
+
+router.get('/newsletter:token', celebrate({
+  // валидируем параметры
+  params: Joi.object().keys({
+    token: Joi.string().min(3).required(),
+  }),
+}), offNewsLetterByEmail);
 
 router.post('/send-download-email', celebrate({
   body: Joi.object().keys({

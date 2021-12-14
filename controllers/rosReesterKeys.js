@@ -20,12 +20,14 @@ module.exports.create = (req, res, next) => {
     owner,
   } = req.body;
   const realDate = new Date
+  let dateMark = moment(realDate.toISOString()).tz("Europe/Moscow").format('x')
   let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
   rosReesterKey.create({
     key,
     balance,
     key_owner: owner,
     date,
+    recent_change: dateMark,
   })
     .then((key) => {
       res.status(200).send({ key })
@@ -49,6 +51,8 @@ module.exports.addBalance = (req, res, next) => {
     deposit,
     id = null,
   } = req.body;
+  const realDate = new Date
+  let dateMark = moment(realDate.toISOString()).tz("Europe/Moscow").format('x')
   if (id !== null && key !== null) {
     throw new InvalidDataError('Можно отправить либо ключ либо id');
   } else
@@ -57,7 +61,8 @@ module.exports.addBalance = (req, res, next) => {
         .then((key) => {
 
           rosReesterKey.findByIdAndUpdate(key._id, {
-            balance: key.balance + deposit
+            balance: key.balance + deposit,
+            recent_change: dateMark,
           }, opts)
             .then((key) => {
               res.status(200).send({ key })
@@ -91,7 +96,8 @@ module.exports.addBalance = (req, res, next) => {
           .then((key) => {
 
             rosReesterKey.findByIdAndUpdate(key._id, {
-              balance: key.balance + deposit
+              balance: key.balance + deposit,
+              recent_change: dateMark,
             }, opts)
               .then((key) => {
                 res.status(200).send({ key })
@@ -128,6 +134,8 @@ module.exports.withdrawBalance = (req, res, next) => {
     withdraw,
     id = null,
   } = req.body;
+  const realDate = new Date
+  let dateMark = moment(realDate.toISOString()).tz("Europe/Moscow").format('x')
   if (id !== null && key !== null) {
     throw new InvalidDataError('Можно отправить либо ключ либо id');
   } else
@@ -137,7 +145,8 @@ module.exports.withdrawBalance = (req, res, next) => {
           if (key.balance === 0) throw new Error('ZeroBalance')
           if (key.balance - withdraw < 0) throw new Error('UncorrectWithdraw')
           rosReesterKey.findByIdAndUpdate(key._id, {
-            balance: key.balance - withdraw
+            balance: key.balance - withdraw,
+            recent_change: dateMark,
           }, opts)
             .then((key) => {
               res.status(200).send({ key })
@@ -184,7 +193,8 @@ module.exports.withdrawBalance = (req, res, next) => {
             if (key.balance === 0) throw new Error('ZeroBalance')
             if (key.balance - withdraw < 0) throw new Error('UncorrectWithdraw')
             rosReesterKey.findByIdAndUpdate(key._id, {
-              balance: key.balance - withdraw
+              balance: key.balance - withdraw,
+              recent_change: dateMark,
             }, opts)
               .then((key) => {
                 res.status(200).send({ key })
