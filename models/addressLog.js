@@ -12,6 +12,9 @@ const addressLogSchema = new mongoose.Schema({
     our_res: {
         type: String,
     },
+    rosreestr_res: {
+        type: String,
+    },
     is_ordered: {
         type: Boolean,
     },

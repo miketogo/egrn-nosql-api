@@ -9,6 +9,7 @@ router.post('/create', celebrate({
         user_text: Joi.string().required(),
         google_res: Joi.string(),
         our_res: Joi.string(),
+        rosreestr_res: Joi.string(),
         is_ordered: Joi.boolean(),
         telegram_id: Joi.string().required(),
     }),

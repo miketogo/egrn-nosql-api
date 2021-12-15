@@ -18,6 +18,7 @@ module.exports.create = (req, res, next) => {
         user_text,
         google_res = 'Не указан',
         our_res = 'Не указан',
+        rosreestr_res = 'Не указан',
         is_ordered = false,
         telegram_id,
     } = req.body;
@@ -30,6 +31,7 @@ module.exports.create = (req, res, next) => {
                 user_text,
                 google_res,
                 our_res,
+                rosreestr_res,
                 is_ordered,
                 user_id: user._id.toString(),
                 date,
