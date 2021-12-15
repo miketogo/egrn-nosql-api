@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 // Опишем схему:
 const orderSchema = new mongoose.Schema({
+    dete:{
+        type: String,
+    },
     object_address: {
         type: String,
         required: true,

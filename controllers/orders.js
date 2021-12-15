@@ -248,6 +248,7 @@ id пользователя: ${user._id}
 баланс пользователя: ${user.balance - order_items.length}        
                                     `);
                   Order.create({
+                    date: date,
                     object_address,
                     town,
                     cadastral,
@@ -519,6 +520,7 @@ id пользователя: ${user._id}
                                     `);
 
                   Order.create({
+                    date: date,
                     object_address,
                     town,
                     street,
@@ -893,6 +895,7 @@ id пользователя: ${user._id}
                                     `);
 
                   Order.create({
+                    date: date,
                     object_address,
                     cadastral,
                     town,
