@@ -240,11 +240,12 @@ module.exports.create = (req, res, next) => {
                   devBot.sendMessage(-760942865, `
 Новый заказ
 
-Адресс: ${object_address}
+Адрес: ${object_address}
 Жилые: ${flats}
 Нежилые: ${non_residential_flats}
-id пользователя: ${user._id}   
-баланс пользователя: ${user.balance - order_items.length}       
+id пользователя: ${user._id}
+Телефон: ${user.phone_number}
+баланс пользователя: ${user.balance - order_items.length}        
                                     `);
                   Order.create({
                     object_address,
@@ -509,10 +510,11 @@ id пользователя: ${user._id}
                   devBot.sendMessage(-760942865, `
 Новый заказ
 
-Адресс: ${object_address}
+Адрес: ${object_address}
 Жилые: ${flats}
 Нежилые: ${non_residential_flats}
-id пользователя: ${user._id}   
+id пользователя: ${user._id}
+Телефон: ${user.phone_number}
 баланс пользователя: ${user.balance - order_items.length}   
                                     `);
 
@@ -882,11 +884,12 @@ id пользователя: ${user._id}
                   devBot.sendMessage(-760942865, `
 Новый заказ
 
-Адресс: ${object_address}
+Адрес: ${object_address}
 Жилые: ${flats}
 Нежилые: ${non_residential_flats}
-id пользователя: ${user._id}   
-баланс пользователя: ${user.balance - order_items.length}   
+id пользователя: ${user._id}
+Телефон: ${user.phone_number}
+баланс пользователя: ${user.balance - order_items.length}     
                                     `);
 
                   Order.create({
