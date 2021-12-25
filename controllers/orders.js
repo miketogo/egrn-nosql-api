@@ -278,7 +278,11 @@ id пользователя: ${user._id}
 
 
 
-                          fetchToSelenium({user_id: user._id, order_id: order._id, time: keyWithdraws[0].operationsCount * 5 + 180})
+                          let prevKeyData2 = notZeroKeys.filter((notzerokey) => {
+                            if (notzerokey.key === keyWithdraws[0].key) return true
+                            else return false
+                          })
+                          fetchToSelenium({user_id: user._id, order_id: order._id, time: (prevKeyData2[0].balance - keyWithdraws[0].balance) * 5 + 180})
 
 
                           res.status(200).send({ order_created: true })
@@ -550,7 +554,11 @@ id пользователя: ${user._id}
 
 
 
-                          fetchToSelenium({user_id: user._id, order_id: order._id, time: keyWithdraws[0].operationsCount * 5 + 180})
+                          let prevKeyData2 = notZeroKeys.filter((notzerokey) => {
+                            if (notzerokey.key === keyWithdraws[0].key) return true
+                            else return false
+                          })
+                          fetchToSelenium({user_id: user._id, order_id: order._id, time: (prevKeyData2[0].balance - keyWithdraws[0].balance) * 5 + 180})
 
 
                           res.status(200).send({ order_created: true })
@@ -924,8 +932,11 @@ id пользователя: ${user._id}
 
 
 
-
-                          fetchToSelenium({user_id: user._id, order_id: order._id, time: keyWithdraws[0].operationsCount * 5 + 180})
+                          let prevKeyData2 = notZeroKeys.filter((notzerokey) => {
+                            if (notzerokey.key === keyWithdraws[0].key) return true
+                            else return false
+                          })
+                          fetchToSelenium({user_id: user._id, order_id: order._id, time: (prevKeyData2[0].balance - keyWithdraws[0].balance) * 5 + 180})
 
 
                           res.status(200).send({ order_created: true })
