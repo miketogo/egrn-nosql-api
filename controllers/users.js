@@ -123,7 +123,7 @@ module.exports.getOrdersByTgId = (req, res, next) => {
           }).length,
 
           error_items: item.order_id.order_items.filter((order_item) => {
-            if (order_item.status.toLowerCase() === 'Не найден') return true
+            if (order_item.status.toLowerCase() === 'не найден') return true
             else return false
           }).length,
 
@@ -133,7 +133,7 @@ module.exports.getOrdersByTgId = (req, res, next) => {
           }).length / item.order_id.order_items.length * 100),
 
           error_percent:  Math.round(item.order_id.order_items.filter((order_item) => {
-            if (order_item.status.toLowerCase() === 'Не найден') return true
+            if (order_item.status.toLowerCase() === 'не найден') return true
             else return false
           }).length / item.order_id.order_items.length * 100),
 
@@ -141,7 +141,7 @@ module.exports.getOrdersByTgId = (req, res, next) => {
             if (order_item.status.toLowerCase() === 'завершена') return true
             else return false
           }).length / (item.order_id.order_items.length - item.order_id.order_items.filter((order_item) => {
-            if (order_item.status.toLowerCase() === 'Не найден') return true
+            if (order_item.status.toLowerCase() === 'не найден') return true
             else return false
           }).length) * 100)
         }]
