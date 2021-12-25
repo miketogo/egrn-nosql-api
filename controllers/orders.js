@@ -27,11 +27,12 @@ const devBot = new TelegramBot(devBotToken, { polling: false });
 module.exports.create = (req, res, next) => {
 
 
-  async function fetchToSelenium(user_id, order_id) {
+  async function fetchToSelenium({user_id, order_id, time}) {
 
     const body = {
       user_id: user_id,
-      order_id: order_id
+      order_id: order_id,
+      time: time,
     }
     const response = await fetch('http://egrn-api-selenium.ru/create', {
       method: 'post',
@@ -277,7 +278,7 @@ id пользователя: ${user._id}
 
 
 
-                          fetchToSelenium(user._id, order._id)
+                          fetchToSelenium({user_id: user._id, order_id: order._id, time: keyWithdraws[0].operationsCount * 5 + 180})
 
 
                           res.status(200).send({ order_created: true })
@@ -549,7 +550,7 @@ id пользователя: ${user._id}
 
 
 
-                          fetchToSelenium(user._id, order._id)
+                          fetchToSelenium({user_id: user._id, order_id: order._id, time: keyWithdraws[0].operationsCount * 5 + 180})
 
 
                           res.status(200).send({ order_created: true })
@@ -924,7 +925,7 @@ id пользователя: ${user._id}
 
 
 
-                          fetchToSelenium(user._id, order._id)
+                          fetchToSelenium({user_id: user._id, order_id: order._id, time: keyWithdraws[0].operationsCount * 5 + 180})
 
 
                           res.status(200).send({ order_created: true })
