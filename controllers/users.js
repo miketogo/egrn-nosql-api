@@ -116,14 +116,34 @@ module.exports.getOrdersByTgId = (req, res, next) => {
           house_internal_letter: item.order_id.house_internal_letter,
           house_internal_number: item.order_id.house_internal_number,
           non_residential_flats: item.order_id.non_residential_flats,
+
           ready_items: item.order_id.order_items.filter((order_item) => {
             if (order_item.status.toLowerCase() === 'завершена') return true
             else return false
           }).length,
+
+          error_items: item.order_id.order_items.filter((order_item) => {
+            if (order_item.status.toLowerCase() === 'Не найден') return true
+            else return false
+          }).length,
+
           ready_percent: Math.round(item.order_id.order_items.filter((order_item) => {
             if (order_item.status.toLowerCase() === 'завершена') return true
             else return false
-          }).length / item.order_id.order_items.length * 100)
+          }).length / item.order_id.order_items.length * 100),
+
+          error_percent:  Math.round(item.order_id.order_items.filter((order_item) => {
+            if (order_item.status.toLowerCase() === 'Не найден') return true
+            else return false
+          }).length / item.order_id.order_items.length * 100),
+
+          ready_wthiout_errors_percent: Math.round(item.order_id.order_items.filter((order_item) => {
+            if (order_item.status.toLowerCase() === 'завершена') return true
+            else return false
+          }).length / (item.order_id.order_items.length - item.order_id.order_items.filter((order_item) => {
+            if (order_item.status.toLowerCase() === 'Не найден') return true
+            else return false
+          }).length) * 100)
         }]
       })
 
