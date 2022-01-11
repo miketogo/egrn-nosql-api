@@ -134,7 +134,7 @@ module.exports.getOrdersByTgId = (req, res, next) => {
             else return false
           }).length / item.order_id.order_items.length * 100),
 
-          error_percent:  Math.round(item.order_id.order_items.filter((order_item) => {
+          error_percent: Math.round(item.order_id.order_items.filter((order_item) => {
             if (order_item.status.toLowerCase() === 'не найден') return true
             else return false
           }).length / item.order_id.order_items.length * 100),
@@ -354,14 +354,14 @@ module.exports.sendDownloadEmail = (req, res, next) => {
       })
       let emailToken = jwt.sign({ _id: user._id, email: user.email, type: 'newsletter' }, jwtEmailSecretPhrase, { expiresIn: '7d' });
       console.log(order)
-      const flats = order[0].order_id.flats,
-      const non_res_flats = order[0].order_id.non_residential_flats,
+      let flats = order[0].order_id.flats
+      let non_res_flats = order[0].order_id.non_residential_flats
       const title = `Отчёт из ЕГРН по адресу "${order[0].order_id.object_address}"`
       const text = `Отчёт из ЕГРН
 Дата: ${order[0].date}
 Адрес: "${order[0].order_id.object_address}"
-${flats.replace(/\d/g, '').length === 0 ? ''  : flats.split(';').length > 1 || flats.split('-').length > 1 ? `Квартиры: ${flats}`: `Квартира: ${flats}`}
-${non_res_flats.replace(/\d/g, '').length === 0 ? ''  : non_res_flats.split(';').length > 1 || non_res_flats.split('-').length > 1 ? `Помещения: ${non_res_flats}`: `Помещение: ${non_res_flats}`}
+${flats.replace(/\d/g, '').length === 0 ? '' : flats.split(';').length > 1 || flats.split('-').length > 1 ? `Квартиры: ${flats}` : `Квартира: ${flats}`}
+${non_res_flats.replace(/\d/g, '').length === 0 ? '' : non_res_flats.split(';').length > 1 || non_res_flats.split('-').length > 1 ? `Помещения: ${non_res_flats}` : `Помещение: ${non_res_flats}`}
             
 Перейдите по ссылке чтобы скачать документ EXCEL
 ${apiLink}download/${order_id}`
