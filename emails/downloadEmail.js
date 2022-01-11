@@ -1,4 +1,4 @@
-const downloadEmailHtml = ({ order_id, link, date, address, flats, token }) => {
+const downloadEmailHtml = ({ order_id, link, date, address, flats, token, non_res_flats }) => {
   return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -139,7 +139,8 @@ a[x-apple-data-detectors='true'] {
     Отчёт из ЕГРН<br/>
     Дата: ${date}<br/>
     Адрес: "${address}"<br/>
-    Диапазон квартир: ${flats}
+    ${flats.replace(/\d/g, '').length === 0 ? ''  : flats.split(';').length > 1 || flats.split('-').length > 1 ? `Квартиры: ${flats}`: `Квартира: ${flats}`}
+    ${non_res_flats.replace(/\d/g, '').length === 0 ? ''  : non_res_flats.split(';').length > 1 || non_res_flats.split('-').length > 1 ? `Помещения: ${non_res_flats}`: `Помещение: ${non_res_flats}`}
   </h1>
 
       </td>
