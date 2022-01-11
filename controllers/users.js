@@ -274,11 +274,14 @@ module.exports.verifyEmail = (req, res, next) => {
                 else return false
               })
               console.log(order)
+              let flats = order[0].order_id.flats
+              let non_res_flats = order[0].order_id.non_residential_flats
               const title = `Отчёт из ЕГРН по адресу "${order[0].order_id.object_address}"`
               const text = `Отчёт из ЕГРН
 Дата: ${order[0].date}
 Адрес: "${order[0].order_id.object_address}"
-Диапазон квартир: ${order[0].order_id.flats}
+${!flats ? '' : flats.split(';').length > 1 || flats.split('-').length > 1 ? `Квартиры: ${flats}` : `Квартира: ${flats}`}
+${!non_res_flats ? '' : non_res_flats.split(';').length > 1 || non_res_flats.split('-').length > 1 ? `Помещения: ${non_res_flats}` : `Помещение: ${non_res_flats}`}
                   
 Перейдите по ссылке чтобы скачать документ EXCEL
 ${apiLink}download/${payload.order_id}`
@@ -292,7 +295,8 @@ ${apiLink}download/${payload.order_id}`
                   link: apiLink,
                   date: order[0].date,
                   address: order[0].order_id.object_address,
-                  flats: order[0].order_id.flats,
+                  flats,
+                  non_res_flats,
                 })}`
               }
               mailer(massage)
