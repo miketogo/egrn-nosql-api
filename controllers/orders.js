@@ -752,7 +752,7 @@ id пользователя: ${user._id}
 
       if (non_residential_flats.replace(/\d/g, '').length === 0) {
         let item = {
-          appartment: Number(non_residential_flats.replace(/\d/g, '')) + '-Н',
+          appartment: Number(non_residential_flats) + '-Н',
 
           rosreestr_key: keyWithdraws[1].key
         }
