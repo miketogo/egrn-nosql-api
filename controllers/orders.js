@@ -752,12 +752,12 @@ id пользователя: ${user._id}
 
       if (non_residential_flats.replace(/\d/g, '').length === 0) {
         let item = {
-          appartment: Number(non_residential_flats) + '-Н',
+          appartment: Number(non_residential_flats.replace(/\d/g, '')) + '-Н',
 
           rosreestr_key: keyWithdraws[0].key
         }
         keyWithdraws = keyWithdraws.map((item, i) => {
-          if (item.key === keyWithdraws[0].key) {
+          if (item.key === keyWithdraws[1].key) {
             return {
               _id: item._id,
               key: item.key,
@@ -765,7 +765,7 @@ id пользователя: ${user._id}
             }
           } return item
         })
-        order_items = [item]
+        order_items = [...order_items, item]
 
 
       } else if (non_residential_flats.split(';').length > 1) {
