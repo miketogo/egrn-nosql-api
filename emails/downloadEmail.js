@@ -139,8 +139,8 @@ a[x-apple-data-detectors='true'] {
     Отчёт из ЕГРН<br/>
     Дата: ${date}<br/>
     Адрес: "${address}"<br/>
-    ${flats.replace(/\d/g, '').length === 0 ? ''  : flats.split(';').length > 1 || flats.split('-').length > 1 ? `Квартиры: ${flats}`: `Квартира: ${flats}`}
-    ${non_res_flats.replace(/\d/g, '').length === 0 ? ''  : non_res_flats.split(';').length > 1 || non_res_flats.split('-').length > 1 ? `Помещения: ${non_res_flats}`: `Помещение: ${non_res_flats}`}
+    ${flats ? ''  : flats.split(';').length > 1 || flats.split('-').length > 1 ? `Квартиры: ${flats}`: `Квартира: ${flats}`}
+    ${non_res_flats ? ''  : non_res_flats.split(';').length > 1 || non_res_flats.split('-').length > 1 ? `Помещения: ${non_res_flats}`: `Помещение: ${non_res_flats}`}
   </h1>
 
       </td>

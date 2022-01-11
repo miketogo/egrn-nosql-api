@@ -360,8 +360,8 @@ module.exports.sendDownloadEmail = (req, res, next) => {
       const text = `Отчёт из ЕГРН
 Дата: ${order[0].date}
 Адрес: "${order[0].order_id.object_address}"
-${flats.replace(/\d/g, '').length === 0 ? '' : flats.split(';').length > 1 || flats.split('-').length > 1 ? `Квартиры: ${flats}` : `Квартира: ${flats}`}
-${non_res_flats.replace(/\d/g, '').length === 0 ? '' : non_res_flats.split(';').length > 1 || non_res_flats.split('-').length > 1 ? `Помещения: ${non_res_flats}` : `Помещение: ${non_res_flats}`}
+${flats ? '' : flats.split(';').length > 1 || flats.split('-').length > 1 ? `Квартиры: ${flats}` : `Квартира: ${flats}`}
+${non_res_flats ? '' : non_res_flats.split(';').length > 1 || non_res_flats.split('-').length > 1 ? `Помещения: ${non_res_flats}` : `Помещение: ${non_res_flats}`}
             
 Перейдите по ссылке чтобы скачать документ EXCEL
 ${apiLink}download/${order_id}`
