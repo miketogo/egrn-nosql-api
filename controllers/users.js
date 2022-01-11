@@ -34,6 +34,7 @@ module.exports.create = (req, res, next) => {
   const {
     telegram_id,
     phone_number,
+    username = 'Не указан'
   } = req.body;
   const realDate = new Date
   let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
@@ -42,14 +43,15 @@ module.exports.create = (req, res, next) => {
     telegram_id,
     phone_number,
     reg_date: date,
+    username,
     recent_change: dateMark,
   })
     .then((user) => {
       devBot.sendMessage(-760942865, `
 Новый пользователь
 
-id телеграма: ${telegram_id}
-телефон: ${phone_number}    
+Телефон: ${phone_number}   
+Имя: ${username}
 `);
 
       res.status(200).send({ user })

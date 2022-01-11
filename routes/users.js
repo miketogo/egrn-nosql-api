@@ -1,13 +1,14 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
-  offNewsLetterByEmail, create, findByTgId, getOrdersByTgId, connectEmail, verifyEmail, sendDownloadEmail, findUserByOrderId, onNewsLetter, offNewsLetter, 
+  offNewsLetterByEmail, create, findByTgId, getOrdersByTgId, connectEmail, verifyEmail, sendDownloadEmail, findUserByOrderId, onNewsLetter, offNewsLetter,
 } = require('../controllers/users');
 
 router.post('/create', celebrate({
   body: Joi.object().keys({
     telegram_id: Joi.string().required(),
     phone_number: Joi.string().required(),
+    username: Joi.string(),
   }),
 }), create);
 

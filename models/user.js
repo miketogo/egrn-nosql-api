@@ -11,7 +11,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'Не указан',
     },
-    emailVerified:{
+    username: {
+        type: String,
+        default: 'Не указан',
+    },
+    emailVerified: {
         type: Boolean,
         required: true,
         default: false,
