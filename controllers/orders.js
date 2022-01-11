@@ -754,7 +754,7 @@ id пользователя: ${user._id}
         let item = {
           appartment: Number(non_residential_flats.replace(/\d/g, '')) + '-Н',
 
-          rosreestr_key: keyWithdraws[0].key
+          rosreestr_key: keyWithdraws[1].key
         }
         keyWithdraws = keyWithdraws.map((item, i) => {
           if (item.key === keyWithdraws[1].key) {
@@ -769,7 +769,7 @@ id пользователя: ${user._id}
 
 
       } else if (non_residential_flats.split(';').length > 1) {
-        let non_residential_flats = non_residential_flats.split(';')
+        let multiplyFlats = non_residential_flats.split(';')
         console.log(multiplyFlats.length)
 
         console.log('withdrawkeys', keyWithdraws)
