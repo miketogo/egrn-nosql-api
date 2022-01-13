@@ -239,7 +239,8 @@ module.exports.create = (req, res, next) => {
                 balance: user.balance - order_items.length,
                 payment_history: [...user.payment_history, {
                   date: date,
-                  type: `Оплата заказа по адресу ${object_address}, колличество отчетов ${order_items.length}`,
+                  type: `Оплата заказа по адресу ${object_address}.
+Заказано выписок: ${order_items.length}`,
                   amount: - order_items.length,
                 }],
                 recent_change: dateMark,
@@ -516,7 +517,8 @@ Usename: ${user.username}
                 balance: user.balance - order_items.length,
                 payment_history: [...user.payment_history, {
                   date: date,
-                  type: `Оплата заказа по адресу ${object_address}, колличество отчетов ${order_items.length}`,
+                  type: `Оплата заказа по адресу ${object_address}.
+Заказано выписок: ${order_items.length}`,
                   amount: - order_items.length,
                 }],
                 recent_change: dateMark,
@@ -890,7 +892,8 @@ Usename: ${user.username}
                 balance: user.balance - order_items.length,
                 payment_history: [...user.payment_history, {
                   date: date,
-                  type: `Оплата заказа по адресу ${object_address}, колличество отчетов ${order_items.length}`,
+                  type: `Оплата заказа по адресу ${object_address}.
+Заказано выписок: ${order_items.length}`,
                   amount: - order_items.length,
                 }],
                 recent_change: dateMark,
