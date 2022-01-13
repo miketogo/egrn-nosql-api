@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'Не указан',
     },
+    tg_status: {
+        type: String,
+        default: 'Не указан',
+    },
     emailVerified: {
         type: Boolean,
         required: true,

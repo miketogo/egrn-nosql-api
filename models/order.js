@@ -5,6 +5,9 @@ const orderSchema = new mongoose.Schema({
     dete:{
         type: String,
     },
+    code:{
+        type: String,
+    },
     object_address: {
         type: String,
         required: true,

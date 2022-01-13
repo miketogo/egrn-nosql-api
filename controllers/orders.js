@@ -1,7 +1,7 @@
 const moment = require('moment-timezone');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const TelegramBot = require('node-telegram-bot-api');
-
+const voucher_codes = require('voucher-code-generator');
 
 const rosReesterKey = require('../models/rosReesterKey')
 const User = require('../models/user');
@@ -19,6 +19,9 @@ const opts = {
 
 
 const devBotToken = process.env.DEV_TELEGRAM_TOKEN;
+
+const FAST_API_KEY = process.env.FAST_API_KEY;
+
 const devBot = new TelegramBot(devBotToken, { polling: false });
 
 
@@ -27,7 +30,7 @@ const devBot = new TelegramBot(devBotToken, { polling: false });
 module.exports.create = (req, res, next) => {
 
 
-  async function fetchToSelenium({user_id, order_id, time}) {
+  async function fetchToSelenium({ user_id, order_id, time }) {
 
     const body = {
       user_id: user_id,
@@ -37,10 +40,13 @@ module.exports.create = (req, res, next) => {
     const response = await fetch('http://egrn-api-selenium.ru/create', {
       method: 'post',
       body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': `${FAST_API_KEY}`,
+      }
     });
     const data = await response.json();
-    console.log(data);
+
   }
 
 
@@ -60,6 +66,10 @@ module.exports.create = (req, res, next) => {
     house_internal_number = 'Не указан',
     house_internal_building = 'Не указан',
   } = req.body;
+  let code = voucher_codes.generate({
+    length: 5,
+    count: 1,
+  })[0];
   const nowDate = new Date
   let dateMark = moment(nowDate.toISOString()).tz("Europe/Moscow").format('x')
   if (flats === '' && non_residential_flats === '') throw new Error('NoFlatsInOrder')
@@ -71,7 +81,7 @@ module.exports.create = (req, res, next) => {
       })
       if (notZeroKeys.length === 0) throw new Error('AllZeroKeys')
 
-      console.log(notZeroKeys)
+
       const realDate = new Date
       let user
       let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
@@ -94,11 +104,11 @@ module.exports.create = (req, res, next) => {
 
         return 0;
       })
-      console.log('sort', keyWithdraws)
+
 
       if (flats.replace(/\d/g, '').length === 0) {
         let item = {
-          appartment: Number(flats),
+          appartment: `${Number(flats)}`.trim(),
           rosreestr_key: keyWithdraws[0].key
         }
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -115,13 +125,12 @@ module.exports.create = (req, res, next) => {
 
       } else if (flats.split(';').length > 1) {
         let multiplyFlats = flats.split(';')
-        console.log(multiplyFlats.length)
 
-        console.log('withdrawkeys', keyWithdraws)
+
         for (let index = 0; index < multiplyFlats.length; index++) {
           let faltsRange = multiplyFlats[index].split('-')
           for (let flatNumber = faltsRange[0]; flatNumber <= faltsRange[1]; flatNumber++) {
-            console.log('item', keyWithdraws)
+
             if (keyWithdraws.filter((item) => {
 
               if (item && item.balance === 0) return false
@@ -146,10 +155,10 @@ module.exports.create = (req, res, next) => {
                 }
               } return item
             })
-            console.log(keyWithdraws)
+
             let item = {
               rosreestr_key: keyWithdraws[keyIndex].key,
-              appartment: flatNumber
+              appartment: `${flatNumber}`.trim()
             }
             order_items = [...order_items, item]
             if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
@@ -185,10 +194,10 @@ module.exports.create = (req, res, next) => {
               }
             } return item
           })
-          console.log(keyWithdraws)
+
           let item = {
             rosreestr_key: keyWithdraws[keyIndex].key,
-            appartment: flatNumber
+            appartment: `${flatNumber}`.trim()
           }
           order_items = [...order_items, item]
           if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
@@ -214,8 +223,8 @@ module.exports.create = (req, res, next) => {
                       balance: realKeyData.balance - (prevKeyData[0].balance - item.balance),
                       recent_change: dateMark,
                     })
-                      .then((key) => {
-                        console.log("multiFlatRes", key)
+                      .then(() => {
+
                       })
                       .catch((err) => {
                         console.log(err)
@@ -238,16 +247,7 @@ module.exports.create = (req, res, next) => {
                 .then(() => {
 
 
-                  devBot.sendMessage(-760942865, `
-Новый заказ
 
-Адрес: ${object_address}
-Жилые: ${flats}
-Нежилые: ${non_residential_flats}
-id пользователя: ${user._id}
-Телефон: ${user.phone_number}
-баланс пользователя: ${user.balance - order_items.length}        
-                                    `);
                   Order.create({
                     date: date,
                     object_address,
@@ -263,13 +263,25 @@ id пользователя: ${user._id}
                     house_internal_number,
                     house_internal_letter,
                     house_internal_building,
+                    code,
                   })
                     .then((order) => {
                       order_history = [...user.order_history, {
                         order_id: order._id,
                         date
                       }]
-
+                      devBot.sendMessage(-760942865, `
+Новый заказ 
+id: ${order._id}
+                      
+Адрес: ${object_address}
+Жилые: ${flats}
+Нежилые: ${non_residential_flats}
+id пользователя: ${user._id}
+Телефон: ${user.phone_number}
+Usename: ${user.username}
+Баланс пользователя: ${user.balance - order_items.length}        
+                                                          `);
                       User.findByIdAndUpdate(user._id, {
                         order_history
                       }, opts)
@@ -282,7 +294,7 @@ id пользователя: ${user._id}
                             if (notzerokey.key === keyWithdraws[0].key) return true
                             else return false
                           })
-                          fetchToSelenium({user_id: user._id, order_id: order._id, time: (prevKeyData2[0].balance - keyWithdraws[0].balance) * 5 + 180})
+                          fetchToSelenium({ user_id: user._id, order_id: order._id, time: (prevKeyData2[0].balance - keyWithdraws[0].balance) * 5 + 180 })
 
 
                           res.status(200).send({ order_created: true })
@@ -347,7 +359,6 @@ id пользователя: ${user._id}
       })
       if (notZeroKeys.length === 0) throw new Error('AllZeroKeys')
 
-      console.log(notZeroKeys)
       const realDate = new Date
       let user
       let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
@@ -370,11 +381,11 @@ id пользователя: ${user._id}
 
         return 0;
       })
-      console.log('sort', keyWithdraws)
+
 
       if (non_residential_flats.replace(/\d/g, '').length === 0) {
         let item = {
-          appartment: Number(non_residential_flats) + '-Н',
+          appartment: `${Number(non_residential_flats) + '-Н'}`.trim(),
           rosreestr_key: keyWithdraws[0].key
         }
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -391,13 +402,12 @@ id пользователя: ${user._id}
 
       } else if (non_residential_flats.split(';').length > 1) {
         let non_residential_flats = non_residential_flats.split(';')
-        console.log(multiplyFlats.length)
 
-        console.log('withdrawkeys', keyWithdraws)
+
         for (let index = 0; index < multiplyFlats.length; index++) {
           let faltsRange = multiplyFlats[index].split('-')
           for (let flatNumber = faltsRange[0]; flatNumber <= faltsRange[1]; flatNumber++) {
-            console.log('item', keyWithdraws)
+
             if (keyWithdraws.filter((item) => {
 
               if (item && item.balance === 0) return false
@@ -422,10 +432,10 @@ id пользователя: ${user._id}
                 }
               } return item
             })
-            console.log(keyWithdraws)
+
             let item = {
               rosreestr_key: keyWithdraws[keyIndex].key,
-              appartment: flatNumber + '-Н'
+              appartment: `${flatNumber + '-Н'}`.trim()
             }
             order_items = [...order_items, item]
             if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
@@ -461,10 +471,10 @@ id пользователя: ${user._id}
               }
             } return item
           })
-          console.log(keyWithdraws)
+
           let item = {
             rosreestr_key: keyWithdraws[keyIndex].key,
-            appartment: flatNumber + '-Н'
+            appartment: `${flatNumber + '-Н'}`.trim()
           }
           order_items = [...order_items, item]
           if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
@@ -490,8 +500,8 @@ id пользователя: ${user._id}
                       balance: realKeyData.balance - (prevKeyData[0].balance - item.balance),
                       recent_change: dateMark,
                     })
-                      .then((key) => {
-                        console.log("multiFlatRes", key)
+                      .then(() => {
+
                       })
                       .catch((err) => {
                         console.log(err)
@@ -513,16 +523,7 @@ id пользователя: ${user._id}
               }, opts)
                 .then(() => {
 
-                  devBot.sendMessage(-760942865, `
-Новый заказ
 
-Адрес: ${object_address}
-Жилые: ${flats}
-Нежилые: ${non_residential_flats}
-id пользователя: ${user._id}
-Телефон: ${user.phone_number}
-баланс пользователя: ${user.balance - order_items.length}   
-                                    `);
 
                   Order.create({
                     date: date,
@@ -538,14 +539,26 @@ id пользователя: ${user._id}
                     date,
                     house_internal_number,
                     house_internal_letter,
-                    house_internal_building
+                    house_internal_building,
+                    code,
                   })
                     .then((order) => {
                       order_history = [...user.order_history, {
                         order_id: order._id,
                         date
                       }]
-
+                      devBot.sendMessage(-760942865, `
+Новый заказ 
+id: ${order._id}
+                      
+Адрес: ${object_address}
+Жилые: ${flats}
+Нежилые: ${non_residential_flats}
+id пользователя: ${user._id}
+Телефон: ${user.phone_number}
+Usename: ${user.username}
+Баланс пользователя: ${user.balance - order_items.length}        
+                                                          `);
                       User.findByIdAndUpdate(user._id, {
                         order_history
                       }, opts)
@@ -558,7 +571,7 @@ id пользователя: ${user._id}
                             if (notzerokey.key === keyWithdraws[0].key) return true
                             else return false
                           })
-                          fetchToSelenium({user_id: user._id, order_id: order._id, time: (prevKeyData2[0].balance - keyWithdraws[0].balance) * 5 + 180})
+                          fetchToSelenium({ user_id: user._id, order_id: order._id, time: (prevKeyData2[0].balance - keyWithdraws[0].balance) * 5 + 180 })
 
 
                           res.status(200).send({ order_created: true })
@@ -623,7 +636,6 @@ id пользователя: ${user._id}
       })
       if (notZeroKeys.length === 0) throw new Error('AllZeroKeys')
 
-      console.log(notZeroKeys)
       const realDate = new Date
       let user
       let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
@@ -646,10 +658,10 @@ id пользователя: ${user._id}
 
         return 0;
       })
-      console.log('sort', keyWithdraws)
+
       if (flats.replace(/\d/g, '').length === 0) {
         let item = {
-          appartment: Number(flats),
+          appartment: `${Number(flats)}`.trim(),
           rosreestr_key: keyWithdraws[0].key
         }
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -666,13 +678,11 @@ id пользователя: ${user._id}
 
       } else if (flats.split(';').length > 1) {
         let multiplyFlats = flats.split(';')
-        console.log(multiplyFlats.length)
 
-        console.log('withdrawkeys', keyWithdraws)
         for (let index = 0; index < multiplyFlats.length; index++) {
           let faltsRange = multiplyFlats[index].split('-')
           for (let flatNumber = faltsRange[0]; flatNumber <= faltsRange[1]; flatNumber++) {
-            console.log('item', keyWithdraws)
+
             if (keyWithdraws.filter((item) => {
 
               if (item && item.balance === 0) return false
@@ -697,10 +707,9 @@ id пользователя: ${user._id}
                 }
               } return item
             })
-            console.log(keyWithdraws)
             let item = {
               rosreestr_key: keyWithdraws[keyIndex].key,
-              appartment: flatNumber
+              appartment: `${flatNumber}`.trim()
             }
             order_items = [...order_items, item]
             if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
@@ -736,10 +745,9 @@ id пользователя: ${user._id}
               }
             } return item
           })
-          console.log(keyWithdraws)
           let item = {
             rosreestr_key: keyWithdraws[keyIndex].key,
-            appartment: flatNumber
+            appartment: `${flatNumber}`.trim()
           }
           order_items = [...order_items, item]
           if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
@@ -752,7 +760,7 @@ id пользователя: ${user._id}
 
       if (non_residential_flats.replace(/\d/g, '').length === 0) {
         let item = {
-          appartment: Number(non_residential_flats) + '-Н',
+          appartment: `${Number(non_residential_flats) + '-Н'}`.trim(),
 
           rosreestr_key: keyWithdraws[1].key
         }
@@ -770,13 +778,11 @@ id пользователя: ${user._id}
 
       } else if (non_residential_flats.split(';').length > 1) {
         let multiplyFlats = non_residential_flats.split(';')
-        console.log(multiplyFlats.length)
 
-        console.log('withdrawkeys', keyWithdraws)
         for (let index = 0; index < multiplyFlats.length; index++) {
           let faltsRange = multiplyFlats[index].split('-')
           for (let flatNumber = faltsRange[0]; flatNumber <= faltsRange[1]; flatNumber++) {
-            console.log('item', keyWithdraws)
+
             if (keyWithdraws.filter((item) => {
 
               if (item && item.balance === 0) return false
@@ -801,10 +807,9 @@ id пользователя: ${user._id}
                 }
               } return item
             })
-            console.log(keyWithdraws)
             let item = {
               rosreestr_key: keyWithdraws[keyIndex].key,
-              appartment: flatNumber + '-Н'
+              appartment: `${flatNumber + '-Н'}`.trim()
             }
             order_items = [...order_items, item]
             if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
@@ -840,10 +845,10 @@ id пользователя: ${user._id}
               }
             } return item
           })
-          console.log(keyWithdraws)
+
           let item = {
             rosreestr_key: keyWithdraws[keyIndex].key,
-            appartment: flatNumber + '-Н'
+            appartment: `${flatNumber + '-Н'}`.trim()
           }
           order_items = [...order_items, item]
           if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
@@ -869,8 +874,8 @@ id пользователя: ${user._id}
                       balance: realKeyData.balance - (prevKeyData[0].balance - item.balance),
                       recent_change: dateMark,
                     })
-                      .then((key) => {
-                        console.log("multiFlatRes", key)
+                      .then(() => {
+
                       })
                       .catch((err) => {
                         console.log(err)
@@ -892,16 +897,6 @@ id пользователя: ${user._id}
               }, opts)
                 .then(() => {
 
-                  devBot.sendMessage(-760942865, `
-Новый заказ
-
-Адрес: ${object_address}
-Жилые: ${flats}
-Нежилые: ${non_residential_flats}
-id пользователя: ${user._id}
-Телефон: ${user.phone_number}
-баланс пользователя: ${user.balance - order_items.length}     
-                                    `);
 
                   Order.create({
                     date: date,
@@ -917,14 +912,26 @@ id пользователя: ${user._id}
                     date,
                     house_internal_number,
                     house_internal_letter,
-                    house_internal_building
+                    house_internal_building,
+                    code,
                   })
                     .then((order) => {
                       order_history = [...user.order_history, {
                         order_id: order._id,
                         date
                       }]
-
+                      devBot.sendMessage(-760942865, `
+Новый заказ 
+id: ${order._id}
+                      
+Адрес: ${object_address}
+Жилые: ${flats}
+Нежилые: ${non_residential_flats}
+id пользователя: ${user._id}
+Телефон: ${user.phone_number}
+Usename: ${user.username}
+Баланс пользователя: ${user.balance - order_items.length}        
+                                                          `);
                       User.findByIdAndUpdate(user._id, {
                         order_history
                       }, opts)
@@ -936,7 +943,7 @@ id пользователя: ${user._id}
                             if (notzerokey.key === keyWithdraws[0].key) return true
                             else return false
                           })
-                          fetchToSelenium({user_id: user._id, order_id: order._id, time: (prevKeyData2[0].balance - keyWithdraws[0].balance) * 5 + 180})
+                          fetchToSelenium({ user_id: user._id, order_id: order._id, time: (prevKeyData2[0].balance - keyWithdraws[0].balance) * 5 + 180 })
 
 
                           res.status(200).send({ order_created: true })
@@ -1013,8 +1020,6 @@ module.exports.getTime = (req, res, next) => {
         else return true
       })
       if (notZeroKeys.length === 0) throw new Error('AllZeroKeys')
-
-      console.log(notZeroKeys)
       const realDate = new Date
       let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
 
@@ -1036,7 +1041,7 @@ module.exports.getTime = (req, res, next) => {
 
         return 0;
       })
-      console.log('sort', keyWithdraws)
+
 
       if (flats.replace(/\d/g, '').length === 0) {
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -1054,13 +1059,11 @@ module.exports.getTime = (req, res, next) => {
 
       } else if (flats.split(';').length > 1) {
         let multiplyFlats = flats.split(';')
-        console.log(multiplyFlats.length)
 
-        console.log('withdrawkeys', keyWithdraws)
         for (let index = 0; index < multiplyFlats.length; index++) {
           let faltsRange = multiplyFlats[index].split('-')
           for (let flatNumber = faltsRange[0]; flatNumber <= faltsRange[1]; flatNumber++) {
-            console.log('item', keyWithdraws)
+
             if (keyWithdraws.filter((item) => {
 
               if (item && item.balance === 0) return false
@@ -1087,7 +1090,7 @@ module.exports.getTime = (req, res, next) => {
                 }
               } return item
             })
-            console.log(keyWithdraws)
+
             if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
             else keyIndex = keyIndex + 1
           }
@@ -1130,7 +1133,7 @@ module.exports.getTime = (req, res, next) => {
               }
             } return item
           })
-          console.log(keyWithdraws)
+
           if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
           else keyIndex = keyIndex + 1
         }
@@ -1174,7 +1177,7 @@ module.exports.getTime = (req, res, next) => {
       })
       if (notZeroKeys.length === 0) throw new Error('AllZeroKeys')
 
-      console.log(notZeroKeys)
+
       const realDate = new Date
       let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
 
@@ -1196,7 +1199,7 @@ module.exports.getTime = (req, res, next) => {
 
         return 0;
       })
-      console.log('sort', keyWithdraws)
+
 
       if (non_residential_flats.replace(/\d/g, '').length === 0) {
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -1214,13 +1217,11 @@ module.exports.getTime = (req, res, next) => {
 
       } else if (non_residential_flats.split(';').length > 1) {
         let multiplyFlats = non_residential_flats.split(';')
-        console.log(multiplyFlats.length)
 
-        console.log('withdrawkeys', keyWithdraws)
         for (let index = 0; index < multiplyFlats.length; index++) {
           let faltsRange = multiplyFlats[index].split('-')
           for (let flatNumber = faltsRange[0]; flatNumber <= faltsRange[1]; flatNumber++) {
-            console.log('item', keyWithdraws)
+
             if (keyWithdraws.filter((item) => {
 
               if (item && item.balance === 0) return false
@@ -1247,7 +1248,6 @@ module.exports.getTime = (req, res, next) => {
                 }
               } return item
             })
-            console.log(keyWithdraws)
             if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
             else keyIndex = keyIndex + 1
           }
@@ -1290,7 +1290,7 @@ module.exports.getTime = (req, res, next) => {
               }
             } return item
           })
-          console.log(keyWithdraws)
+
           if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
           else keyIndex = keyIndex + 1
         }
@@ -1334,7 +1334,7 @@ module.exports.getTime = (req, res, next) => {
       })
       if (notZeroKeys.length === 0) throw new Error('AllZeroKeys')
 
-      console.log(notZeroKeys)
+
       const realDate = new Date
       let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
 
@@ -1356,7 +1356,7 @@ module.exports.getTime = (req, res, next) => {
 
         return 0;
       })
-      console.log('sort', keyWithdraws)
+
 
       if (flats.replace(/\d/g, '').length === 0) {
         keyWithdraws = keyWithdraws.map((item, i) => {
@@ -1374,13 +1374,11 @@ module.exports.getTime = (req, res, next) => {
 
       } else if (flats.split(';').length > 1) {
         let multiplyFlats = flats.split(';')
-        console.log(multiplyFlats.length)
 
-        console.log('withdrawkeys', keyWithdraws)
         for (let index = 0; index < multiplyFlats.length; index++) {
           let faltsRange = multiplyFlats[index].split('-')
           for (let flatNumber = faltsRange[0]; flatNumber <= faltsRange[1]; flatNumber++) {
-            console.log('item', keyWithdraws)
+
             if (keyWithdraws.filter((item) => {
 
               if (item && item.balance === 0) return false
@@ -1407,7 +1405,7 @@ module.exports.getTime = (req, res, next) => {
                 }
               } return item
             })
-            console.log(keyWithdraws)
+
             if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
             else keyIndex = keyIndex + 1
           }
@@ -1450,7 +1448,7 @@ module.exports.getTime = (req, res, next) => {
               }
             } return item
           })
-          console.log(keyWithdraws)
+
           if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
           else keyIndex = keyIndex + 1
         }
@@ -1472,13 +1470,11 @@ module.exports.getTime = (req, res, next) => {
 
       } else if (non_residential_flats.split(';').length > 1) {
         let multiplyFlats = non_residential_flats.split(';')
-        console.log(multiplyFlats.length)
 
-        console.log('withdrawkeys', keyWithdraws)
         for (let index = 0; index < multiplyFlats.length; index++) {
           let faltsRange = multiplyFlats[index].split('-')
           for (let flatNumber = faltsRange[0]; flatNumber <= faltsRange[1]; flatNumber++) {
-            console.log('item', keyWithdraws)
+
             if (keyWithdraws.filter((item) => {
 
               if (item && item.balance === 0) return false
@@ -1505,7 +1501,7 @@ module.exports.getTime = (req, res, next) => {
                 }
               } return item
             })
-            console.log(keyWithdraws)
+
             if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
             else keyIndex = keyIndex + 1
           }
@@ -1548,7 +1544,7 @@ module.exports.getTime = (req, res, next) => {
               }
             } return item
           })
-          console.log(keyWithdraws)
+
           if (keyIndex === keyWithdraws.length - 1) keyIndex = 0
           else keyIndex = keyIndex + 1
         }

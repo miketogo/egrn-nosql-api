@@ -1,4 +1,7 @@
 const router = require('express').Router();
+
+const auth = require('../middlewares/auth');
+
 const { celebrate, Joi } = require('celebrate');
 const {
   offNewsLetterByEmail, create, findByTgId, getOrdersByTgId, connectEmail, verifyEmail, sendDownloadEmail, findUserByOrderId, onNewsLetter, offNewsLetter,
@@ -10,25 +13,25 @@ router.post('/create', celebrate({
     phone_number: Joi.string().required(),
     username: Joi.string(),
   }),
-}), create);
+}), auth, create);
 
 router.get('/find-by-tg-id', celebrate({
   body: Joi.object().keys({
     telegram_id: Joi.string().required(),
   }),
-}), findByTgId);
+}), auth, findByTgId);
 
 router.get('/find-by-order-id', celebrate({
   body: Joi.object().keys({
     order_id: Joi.string().required(),
   }),
-}), findUserByOrderId);
+}), auth, findUserByOrderId);
 
 router.get('/orders-by-tg-id', celebrate({
   body: Joi.object().keys({
     telegram_id: Joi.string().required(),
   }),
-}), getOrdersByTgId);
+}), auth, getOrdersByTgId);
 
 router.post('/connect-email-from-tg', celebrate({
   body: Joi.object().keys({
@@ -36,7 +39,7 @@ router.post('/connect-email-from-tg', celebrate({
     email: Joi.string().required(),
     order_id: Joi.string(),
   }),
-}), connectEmail);
+}), auth, connectEmail);
 
 router.get('/email-check/:token', celebrate({
   // валидируем параметры
@@ -57,19 +60,19 @@ router.post('/send-download-email', celebrate({
     telegram_id: Joi.string().required(),
     order_id: Joi.string().required(),
   }),
-}), sendDownloadEmail);
+}), auth, sendDownloadEmail);
 
 
 router.post('/on-newsletter', celebrate({
   body: Joi.object().keys({
     telegram_id: Joi.string().required(),
   }),
-}), onNewsLetter);
+}), auth, onNewsLetter);
 
 router.post('/off-newsletter', celebrate({
   body: Joi.object().keys({
     telegram_id: Joi.string().required(),
   }),
-}), offNewsLetter);
+}), auth, offNewsLetter);
 
 module.exports = router;

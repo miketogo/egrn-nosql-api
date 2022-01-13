@@ -36,6 +36,7 @@ module.exports.create = (req, res, next) => {
     phone_number,
     username = 'Не указан'
   } = req.body;
+  const status = 'member'
   const realDate = new Date
   let date = moment(realDate.toISOString()).tz("Europe/Moscow").format('D.MM.YYYY HH:mm:ss')
   let dateMark = moment(realDate.toISOString()).tz("Europe/Moscow").format('x')
@@ -45,6 +46,7 @@ module.exports.create = (req, res, next) => {
     reg_date: date,
     username,
     recent_change: dateMark,
+    tg_status: status,
   })
     .then((user) => {
       devBot.sendMessage(-760942865, `
@@ -149,13 +151,15 @@ module.exports.getOrdersByTgId = (req, res, next) => {
         }]
       })
 
-      console.log(orders)
 
 
       orders = orders.reverse()
 
 
-      res.status(200).send({ orders })
+      res.status(200).send({
+        user,
+        orders
+      })
     })
     .catch((err) => {
       console.log(err)
@@ -273,7 +277,7 @@ module.exports.verifyEmail = (req, res, next) => {
                 if (item.order_id._id.toString() === payload.order_id) return true
                 else return false
               })
-              console.log(order)
+
               let flats = order[0].order_id.flats
               let non_res_flats = order[0].order_id.non_residential_flats
               const title = `Отчёт из ЕГРН по адресу "${order[0].order_id.object_address}"`
@@ -357,7 +361,7 @@ module.exports.sendDownloadEmail = (req, res, next) => {
         else return false
       })
       let emailToken = jwt.sign({ _id: user._id, email: user.email, type: 'newsletter' }, jwtEmailSecretPhrase, { expiresIn: '7d' });
-      console.log(order)
+
       let flats = order[0].order_id.flats
       let non_res_flats = order[0].order_id.non_residential_flats
       const title = `Отчёт из ЕГРН по адресу "${order[0].order_id.object_address}"`
