@@ -67,9 +67,9 @@ module.exports.create = (req, res, next) => {
     house_internal_building = 'Не указан',
   } = req.body;
   let code = voucher_codes.generate({
-    length: 5,
+    length: 6,
     count: 1,
-  })[0];
+  })[0].toUpperCase();
   const nowDate = new Date
   let dateMark = moment(nowDate.toISOString()).tz("Europe/Moscow").format('x')
   if (flats === '' && non_residential_flats === '') throw new Error('NoFlatsInOrder')
