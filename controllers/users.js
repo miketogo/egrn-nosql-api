@@ -158,8 +158,10 @@ module.exports.getOrdersByTgId = (req, res, next) => {
 
 
       res.status(200).send({
-        user,
-        orders
+        user_id: user._id,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        orders,
       })
     })
     .catch((err) => {
