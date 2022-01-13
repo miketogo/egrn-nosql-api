@@ -111,6 +111,7 @@ module.exports.getOrdersByTgId = (req, res, next) => {
       user.order_history.forEach((item) => {
         orders = [...orders, {
           order_id: item.order_id._id,
+          code: item.order_id.code,
           order_date: item.date,
           object_address: item.order_id.object_address,
           flats: item.order_id.flats,
