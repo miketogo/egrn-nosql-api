@@ -7,7 +7,7 @@ const {
 router.post('/create', celebrate({
   body: Joi.object().keys({
     amount: Joi.number().required().min(1),
-    customCode: Joi.string().min(8).max(10)
+    customCode: Joi.string().min(3).max(15)
   }),
 }), create);
 

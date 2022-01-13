@@ -22,9 +22,9 @@ module.exports.create = (req, res, next) => {
   if (customCode) code = customCode
   else {
     code = voucher_codes.generate({
-      length: 8,
+      length: 5,
       count: 1,
-    })[0];
+    })[0].toUpperCase();
   }
   
   const realDate = new Date
