@@ -7,14 +7,20 @@ module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   const { chat_id } = req.params;
 
-  const token = authorization.replace('Bearer ', '');
-
-  if (token === jwtSecretPhrase){
-    next(); 
-  }
-  else {
+  if (!authorization || !authorization.startsWith('Bearer ')) {
     throw new AuthError('Необходима авторизация');
   }
+  else{
+    const token = authorization.replace('Bearer ', '');
+
+    if (token === jwtSecretPhrase){
+      next(); 
+    }
+    else {
+      throw new AuthError('Необходима авторизация');
+    }
+  }
+ 
   // try {
   //   // попытаемся верифицировать токен
   //   payload = jwt.verify(token, jwtSecretPhrase);
