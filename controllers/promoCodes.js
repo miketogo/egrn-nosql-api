@@ -1,5 +1,6 @@
 const moment = require('moment-timezone');
 const voucher_codes = require('voucher-code-generator');
+const TelegramBot = require('node-telegram-bot-api');
 
 const User = require('../models/user');
 const PromoCode = require('../models/promoCode');
@@ -10,7 +11,8 @@ const opts = {
   runValidators: true,
 };
 
-
+const devBotToken = process.env.DEV_TELEGRAM_TOKEN;
+const devBot = new TelegramBot(devBotToken, { polling: false });
 
 
 module.exports.create = (req, res, next) => {
@@ -81,6 +83,15 @@ module.exports.useCode = (req, res, next) => {
                 isUsed: true
               }, opts)
               .then((UPDCode) => {
+                  devBot.sendMessage(-760942865, `
+*Использован промокод*: ${code}
+*Сумма*: ${code.amount}
+                      
+*id пользователя*: ${user._id}
+*Телефон*: ${user.phone_number}
+*Usename*: ${user.username}
+*Баланс пользователя*: ${UPDUser.balance}           
+                                                          `, { parse_mode: 'Markdown' });
                 res.status(200).send({ UPDUser })
               })
                 .catch((err) => {

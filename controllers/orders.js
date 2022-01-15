@@ -16,12 +16,9 @@ const opts = {
   runValidators: true,
 };
 
-
-
-const devBotToken = process.env.DEV_TELEGRAM_TOKEN;
-
 const FAST_API_KEY = process.env.FAST_API_KEY;
 
+const devBotToken = process.env.DEV_TELEGRAM_TOKEN;
 const devBot = new TelegramBot(devBotToken, { polling: false });
 
 
@@ -272,17 +269,17 @@ module.exports.create = (req, res, next) => {
                         date
                       }]
                       devBot.sendMessage(-760942865, `
-Новый заказ ${code}
-id: ${order._id}
+*Новый заказ* ${code}
+*id*: ${order._id}
                       
-Адрес: ${object_address}
-Жилые: ${flats}
-Нежилые: ${non_residential_flats}
-id пользователя: ${user._id}
-Телефон: ${user.phone_number}
-Usename: ${user.username}
-Баланс пользователя: ${user.balance - order_items.length}        
-                                                          `);
+*Адрес*: ${object_address}
+*Жилые*: ${flats}
+*Нежилые*: ${non_residential_flats}
+*id пользователя*: ${user._id}
+*Телефон*: ${user.phone_number}
+*Usename*: ${user.username}
+*Баланс пользователя*: ${user.balance - order_items.length}        
+                                                          `, { parse_mode: 'Markdown' });
                       User.findByIdAndUpdate(user._id, {
                         order_history
                       }, opts)
@@ -550,17 +547,17 @@ Usename: ${user.username}
                         date
                       }]
                       devBot.sendMessage(-760942865, `
-Новый заказ ${code}
-id: ${order._id}
+*Новый заказ* ${code}
+*id*: ${order._id}
                       
-Адрес: ${object_address}
-Жилые: ${flats}
-Нежилые: ${non_residential_flats}
-id пользователя: ${user._id}
-Телефон: ${user.phone_number}
-Usename: ${user.username}
-Баланс пользователя: ${user.balance - order_items.length}        
-                                                          `);
+*Адрес*: ${object_address}
+*Жилые*: ${flats}
+*Нежилые*: ${non_residential_flats}
+*id пользователя*: ${user._id}
+*Телефон*: ${user.phone_number}
+*Usename*: ${user.username}
+*Баланс пользователя*: ${user.balance - order_items.length}           
+                                                          `, { parse_mode: 'Markdown' });
                       User.findByIdAndUpdate(user._id, {
                         order_history
                       }, opts)
@@ -924,17 +921,17 @@ Usename: ${user.username}
                         date
                       }]
                       devBot.sendMessage(-760942865, `
-Новый заказ ${code}
-id: ${order._id}
+*Новый заказ* ${code}
+*id*: ${order._id}
                       
-Адрес: ${object_address}
-Жилые: ${flats}
-Нежилые: ${non_residential_flats}
-id пользователя: ${user._id}
-Телефон: ${user.phone_number}
-Usename: ${user.username}
-Баланс пользователя: ${user.balance - order_items.length}        
-                                                          `);
+*Адрес*: ${object_address}
+*Жилые*: ${flats}
+*Нежилые*: ${non_residential_flats}
+*id пользователя*: ${user._id}
+*Телефон*: ${user.phone_number}
+*Usename*: ${user.username}
+*Баланс пользователя*: ${user.balance - order_items.length}             
+                                                          `, { parse_mode: 'Markdown' });
                       User.findByIdAndUpdate(user._id, {
                         order_history
                       }, opts)
