@@ -51,11 +51,12 @@ module.exports.create = (req, res, next) => {
   })
     .then((user) => {
       devBot.sendMessage(-760942865, `
-Новый пользователь
+*Новый пользователь*
 
-Телефон: ${phone_number}   
-Имя: ${username}
-`);
+*id*: ${user.id}
+*Телефон*: ${phone_number}   
+*Имя*: ${username}
+`, { parse_mode: 'Markdown' });
 
       res.status(200).send({ user })
     })
