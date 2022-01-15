@@ -9,7 +9,8 @@ const NotFoundError = require('../errors/not-found-err')
 const AuthError = require('../errors/auth-err')
 const mailer = require('../nodemailer');
 const regEmailHtml = require('../emails/regEmail')
-const downloadEmailHtml = require('../emails/downloadEmail')
+const downloadEmailHtml = require('../emails/downloadEmail');
+const user = require('../models/user');
 
 const jwtSecretPhrase = process.env.JWT_SECRET;
 const jwtEmailSecretPhrase = process.env.JWT_EMAIL_SECRET;
@@ -544,3 +545,30 @@ module.exports.offNewsLetterByEmail = (req, res, next) => {
     })
     .catch(next);
 }
+
+
+module.exports.sendMessageToAllUsers = (req, res, next) => {
+  const {
+    text
+  } = req.body;
+  User.find().orFail(() => new Error('NotFound'))
+    .then((users) => {
+      users.forEach((user)=>{
+        bot.sendMessage(user.telegram_id, `${text.trim()}`);
+      })
+      res.status(200).send({ done: true })
+    })
+    .catch((err) => {
+      console.log(err)
+      if (err.code === 11000) {
+        throw new ConflictError('MongoError');
+      }
+      if (err.name === 'ValidationError') {
+        throw new InvalidDataError('Переданы некорректные данные при поиске пользователя');
+      }
+      if (err.message === 'NotFound') {
+        throw new NotFoundError('Нет пользователей');
+      }
+    })
+    .catch(next)
+};

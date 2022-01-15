@@ -272,7 +272,7 @@ module.exports.create = (req, res, next) => {
                         date
                       }]
                       devBot.sendMessage(-760942865, `
-Новый заказ 
+Новый заказ ${code}
 id: ${order._id}
                       
 Адрес: ${object_address}
@@ -550,7 +550,7 @@ Usename: ${user.username}
                         date
                       }]
                       devBot.sendMessage(-760942865, `
-Новый заказ 
+Новый заказ ${code}
 id: ${order._id}
                       
 Адрес: ${object_address}
@@ -924,7 +924,7 @@ Usename: ${user.username}
                         date
                       }]
                       devBot.sendMessage(-760942865, `
-Новый заказ 
+Новый заказ ${code}
 id: ${order._id}
                       
 Адрес: ${object_address}

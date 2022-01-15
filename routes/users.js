@@ -4,7 +4,7 @@ const auth = require('../middlewares/auth');
 
 const { celebrate, Joi } = require('celebrate');
 const {
-  offNewsLetterByEmail, create, findByTgId, getOrdersByTgId, connectEmail, verifyEmail, sendDownloadEmail, findUserByOrderId, onNewsLetter, offNewsLetter,
+  offNewsLetterByEmail, create, findByTgId, getOrdersByTgId, connectEmail, verifyEmail, sendDownloadEmail, findUserByOrderId, onNewsLetter, offNewsLetter, sendMessageToAllUsers,
 } = require('../controllers/users');
 
 router.post('/create', celebrate({
@@ -74,5 +74,11 @@ router.post('/off-newsletter', celebrate({
     telegram_id: Joi.string().required(),
   }),
 }), auth, offNewsLetter);
+
+router.post('/send-message-to-all-users', celebrate({
+  body: Joi.object().keys({
+    text: Joi.string().required(),
+  }),
+}), auth, sendMessageToAllUsers);
 
 module.exports = router;
