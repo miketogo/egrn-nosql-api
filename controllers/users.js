@@ -554,7 +554,7 @@ module.exports.sendMessageToAllUsers = (req, res, next) => {
   User.find().orFail(() => new Error('NotFound'))
     .then((users) => {
       users.forEach((user)=>{
-        bot.sendMessage(user.telegram_id, `${text.trim()}`);
+        bot.sendMessage(user.telegram_id, `${text.trim()}`, { parse_mode: 'HTML' });
       })
       res.status(200).send({ done: true })
     })
