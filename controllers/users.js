@@ -552,12 +552,54 @@ module.exports.sendMessageToAllUsers = (req, res, next) => {
   const {
     text
   } = req.body;
+
+  let counter = {
+    sent: 0,
+    error: 0,
+    kicked: 0,
+  }
+
+  function timer(ms) {
+    return new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        resolve();
+      }, ms);
+    });
+  }
+
+  async function sendMsg(user, text, counter) {
+
+    if (user.tg_status !== 'kicked') {
+      await timer(300)
+        .then(() => {
+
+          bot.sendMessage(user.telegram_id, `${text.trim()}`, { parse_mode: 'HTML' })
+            .then(() => {
+              counter.sent = counter.sent + 1
+            })
+            .catch(() => {
+              counter.error = counter.error + 1
+            })
+        })
+    } else {
+      counter.kicked = counter.kicked + 1
+    }
+  }
+
   User.find().orFail(() => new Error('NotFound'))
     .then((users) => {
-      users.forEach((user)=>{
-        bot.sendMessage(user.telegram_id, `${text.trim()}`, { parse_mode: 'HTML' });
-      })
-      res.status(200).send({ done: true })
+      users.reduce(async (a, user) => {
+        // Wait for the previous item to finish processing
+        await a;
+        // Process this item
+        await sendMsg(user, text, counter);
+      }, Promise.resolve())
+        .then(() => {
+          res.status(200).send({ counter: counter })
+        })
+
+
+
     })
     .catch((err) => {
       console.log(err)
