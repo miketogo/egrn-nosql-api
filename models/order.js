@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 // Опишем схему:
 const orderSchema = new mongoose.Schema({
-    dete:{
+    date:{
         type: String,
     },
     code:{
