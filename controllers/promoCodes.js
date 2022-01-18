@@ -84,7 +84,7 @@ module.exports.useCode = (req, res, next) => {
               }, opts)
               .then((UPDCode) => {
                   devBot.sendMessage(-760942865, `
-*Использован промокод*: ${code}
+*Использован промокод*: ${code.code}
 *Сумма*: ${code.amount}
                       
 *id пользователя*: ${user._id}
