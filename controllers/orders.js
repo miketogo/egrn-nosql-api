@@ -269,17 +269,17 @@ module.exports.create = (req, res, next) => {
                         date
                       }]
                       devBot.sendMessage(-760942865, `
-*Новый заказ* ${code}
-*id*: ${order._id}
+<b>Новый заказ</b> ${code}
+<b>id</b>: ${order._id}
                       
-*Адрес*: ${object_address}
-*Жилые*: ${flats}
-*Нежилые*: ${non_residential_flats}
-*id пользователя*: ${user._id}
-*Телефон*: ${user.phone_number}
-*Usename*: ${user.username}
-*Баланс пользователя*: ${user.balance - order_items.length}        
-                                                          `, { parse_mode: 'Markdown' });
+<b>Адрес</b>: ${object_address}
+<b>Жилые</b>: ${flats}
+<b>Нежилые</b>: ${non_residential_flats}
+<b>id пользователя</b>: ${user._id}
+<b>Телефон</b>: ${user.phone_number}
+<b>Usename</b>: ${user.username}
+<b>Баланс пользователя</b>: ${user.balance - order_items.length}             
+                                                          `, { parse_mode: 'HTML' });
                       User.findByIdAndUpdate(user._id, {
                         order_history
                       }, opts)
@@ -547,17 +547,17 @@ module.exports.create = (req, res, next) => {
                         date
                       }]
                       devBot.sendMessage(-760942865, `
-*Новый заказ* ${code}
-*id*: ${order._id}
+<b>Новый заказ</b> ${code}
+<b>id</b>: ${order._id}
                       
-*Адрес*: ${object_address}
-*Жилые*: ${flats}
-*Нежилые*: ${non_residential_flats}
-*id пользователя*: ${user._id}
-*Телефон*: ${user.phone_number}
-*Usename*: ${user.username}
-*Баланс пользователя*: ${user.balance - order_items.length}           
-                                                          `, { parse_mode: 'Markdown' });
+<b>Адрес</b>: ${object_address}
+<b>Жилые</b>: ${flats}
+<b>Нежилые</b>: ${non_residential_flats}
+<b>id пользователя</b>: ${user._id}
+<b>Телефон</b>: ${user.phone_number}
+<b>Usename</b>: ${user.username}
+<b>Баланс пользователя</b>: ${user.balance - order_items.length}             
+                                                          `, { parse_mode: 'HTML' });
                       User.findByIdAndUpdate(user._id, {
                         order_history
                       }, opts)
@@ -921,17 +921,17 @@ module.exports.create = (req, res, next) => {
                         date
                       }]
                       devBot.sendMessage(-760942865, `
-*Новый заказ* ${code}
-*id*: ${order._id}
+<b>Новый заказ</b> ${code}
+<b>id</b>: ${order._id}
                       
-*Адрес*: ${object_address}
-*Жилые*: ${flats}
-*Нежилые*: ${non_residential_flats}
-*id пользователя*: ${user._id}
-*Телефон*: ${user.phone_number}
-*Usename*: ${user.username}
-*Баланс пользователя*: ${user.balance - order_items.length}             
-                                                          `, { parse_mode: 'Markdown' });
+<b>Адрес</b>: ${object_address}
+<b>Жилые</b>: ${flats}
+<b>Нежилые</b>: ${non_residential_flats}
+<b>id пользователя</b>: ${user._id}
+<b>Телефон</b>: ${user.phone_number}
+<b>Usename</b>: ${user.username}
+<b>Баланс пользователя</b>: ${user.balance - order_items.length}             
+                                                          `, { parse_mode: 'HTML' });
                       User.findByIdAndUpdate(user._id, {
                         order_history
                       }, opts)

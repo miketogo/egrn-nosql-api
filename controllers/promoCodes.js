@@ -84,14 +84,14 @@ module.exports.useCode = (req, res, next) => {
               }, opts)
               .then((UPDCode) => {
                   devBot.sendMessage(-760942865, `
-*Использован промокод*: ${code.code}
-*Сумма*: ${code.amount}
+<b>Использован промокод</b>: ${code.code}
+<b>Сумма</b>: ${code.amount}
                       
-*id пользователя*: ${user._id}
-*Телефон*: ${user.phone_number}
-*Usename*: ${user.username}
-*Баланс пользователя*: ${UPDUser.balance}           
-                                                          `, { parse_mode: 'Markdown' });
+<b>id пользователя</b>: ${user._id}
+<b>Телефон</b>: ${user.phone_number}
+<b>Usename</b>: ${user.username}
+<b>Баланс пользователя</b>: ${UPDUser.balance}           
+                                                          `, { parse_mode: 'HTML' });
                 res.status(200).send({ UPDUser })
               })
                 .catch((err) => {
